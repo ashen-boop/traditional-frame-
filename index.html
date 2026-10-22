@@ -4,18 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Revenue Hub — Traditional Frame Lead Form</title>
-  <!-- Font Awesome for the back arrow icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --popup-image-max-width: 480px;
-      --popup-image-max-height: 70vh;
-      --popup-backdrop-color: rgba(0, 0, 0, 0.75);
-      --popup-border-radius: 16px;
-      --popup-padding: 16px;
-    }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -117,6 +108,99 @@
       line-height: 1.4;
     }
 
+    /* ============================================================ */
+    /* ===== GALLERY FIELD — distinct + 30px extra space ===== */
+    /* ============================================================ */
+    .gallery-field {
+      margin-bottom: 58px; /* 28px original + 30px extra */
+      padding: 16px;
+      background: #ffffff;
+      border: 1.5px solid #e5e5e5;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      position: relative;
+    }
+
+    .gallery-field::before {
+      content: 'REFERENCE';
+      position: absolute;
+      top: -9px;
+      left: 14px;
+      background: #ffffff;
+      color: #888;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      padding: 0 8px;
+      border-radius: 4px;
+    }
+
+    .gallery-field > label {
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .gallery-field > .hint {
+      font-style: italic;
+      color: #999;
+      margin-bottom: 12px;
+    }
+
+    .gallery-preview-wrap {
+      position: relative;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fafafa;
+      border: 1.5px solid #eeeeee;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery-preview-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.25s ease;
+    }
+    .gallery-thumbs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .gallery-thumb {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid #eeeeee;
+      background: #f0f0f0;
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+      padding: 0;
+      transition: border-color 0.2s ease, transform 0.15s ease;
+    }
+    .gallery-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .gallery-thumb:hover {
+      border-color: #00b050;
+      transform: translateY(-1px);
+    }
+    .gallery-thumb.active {
+      border-color: #00b050;
+      box-shadow: 0 0 0 3px rgba(0, 176, 80, 0.12);
+    }
+
+    /* ============================================================ */
+    /* ===== SIZE BUNDLE BOX ===== */
+    /* ============================================================ */
     .size-bundle-box {
       background: #fafafa;
       border: 1.5px solid #e5e5e5;
@@ -143,7 +227,6 @@
     }
     .size-preview-wrap.has-image {
       border-color: #00b050;
-      cursor: zoom-in;
     }
     .size-preview-wrap img {
       width: 100%;
@@ -193,23 +276,6 @@
     .size-preview-wrap.has-image .size-preview-label {
       display: block;
     }
-    .size-preview-zoom-hint {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(0, 0, 0, 0.6);
-      color: #fff;
-      font-size: 10px;
-      padding: 3px 8px;
-      border-radius: 20px;
-      display: none;
-      pointer-events: none;
-      gap: 4px;
-      align-items: center;
-    }
-    .size-preview-wrap.has-image .size-preview-zoom-hint {
-      display: flex;
-    }
 
     .size-categories-row {
       display: grid;
@@ -228,19 +294,10 @@
       flex-direction: column;
       gap: 6px;
       min-width: 0;
-      transition: opacity 0.2s ease;
     }
-
-    /* ============================================================ */
-    /* ===== VISUAL CHANGE ONLY: no more dimming on inactive ===== */
-    /* The JS still toggles the .inactive class, but the CSS no     */
-    /* longer visually dims anything — all 3 categories always      */
-    /* look fully active. The rules/locks themselves are untouched. */
-    /* ============================================================ */
     .size-category.inactive {
-      opacity: 1;        /* was 0.45 — now always full opacity */
+      opacity: 1;
     }
-
     .size-category-title {
       font-size: 10px;
       font-weight: 700;
@@ -260,8 +317,6 @@
       background: #00b050;
       flex-shrink: 0;
     }
-
-    /* Title stays green even in the "inactive" class */
     .size-category.inactive .size-category-title {
       color: #00b050;
     }
@@ -304,7 +359,6 @@
     }
     .custom-select.open .chevron { transform: rotate(180deg); }
 
-    /* ===== LOCKED STATE ===== */
     .custom-select.locked .custom-select-trigger {
       background: #f0f0f0;
       color: #aaa;
@@ -437,7 +491,7 @@
     }
     .other-input input:focus { box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.1); }
 
-    input[type="text"], input[type="email"], input[type="tel"] {
+    input[type="text"], input[type="email"], input[type="tel"], textarea {
       width: 100%;
       padding: 14px 18px;
       font-size: 15px;
@@ -450,12 +504,53 @@
       transition: all 0.25s ease;
       box-shadow: 0 1px 2px rgba(0,0,0,0.02);
     }
-    input[type="text"]:hover, input[type="email"]:hover, input[type="tel"]:hover {
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+      line-height: 1.5;
+    }
+    input[type="text"]:hover, input[type="email"]:hover, input[type="tel"]:hover, textarea:hover {
       border-color: #d0d0d0; background: #ffffff;
     }
-    input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus {
+    input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, textarea:focus {
       border-color: #00b050; background: #ffffff;
       box-shadow: 0 0 0 4px rgba(0, 176, 80, 0.1);
+    }
+
+    /* ============================================================ */
+    /* ===== LOCKED CONTACT SECTION ===== */
+    /* ============================================================ */
+    .contact-section.locked {
+      position: relative;
+      opacity: 0.55;
+      pointer-events: none;
+      user-select: none;
+    }
+    .contact-section.locked input,
+    .contact-section.locked textarea {
+      background: #f0f0f0;
+      cursor: not-allowed;
+    }
+    .contact-lock-note {
+      display: none;
+      margin-bottom: 16px;
+      padding: 12px 16px;
+      background: #fff8e6;
+      border: 1.5px dashed #f0b400;
+      border-radius: 12px;
+      font-size: 13px;
+      color: #7a5b00;
+      line-height: 1.5;
+      align-items: center;
+      gap: 10px;
+    }
+    .contact-section.locked .contact-lock-note {
+      display: flex;
+    }
+    .contact-lock-note i {
+      flex-shrink: 0;
+      font-size: 16px;
+      color: #f0b400;
     }
 
     .submit-btn {
@@ -528,90 +623,6 @@
       line-height: 1.5;
     }
 
-    .image-popup-overlay {
-      position: fixed;
-      inset: 0;
-      background: var(--popup-backdrop-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: var(--popup-padding);
-      z-index: 9999;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.25s ease, visibility 0.25s ease;
-      cursor: zoom-out;
-    }
-    .image-popup-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    .image-popup-content {
-      position: relative;
-      max-width: var(--popup-image-max-width);
-      max-height: var(--popup-image-max-height);
-      width: auto;
-      height: auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform: scale(0.92);
-      transition: transform 0.25s ease;
-      cursor: default;
-    }
-    .image-popup-overlay.active .image-popup-content {
-      transform: scale(1);
-    }
-    .image-popup-content img {
-      display: block;
-      max-width: 100%;
-      max-height: var(--popup-image-max-height);
-      width: auto;
-      height: auto;
-      border-radius: var(--popup-border-radius);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
-      background: #fff;
-    }
-    .image-popup-caption {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -36px;
-      text-align: center;
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-      pointer-events: none;
-    }
-    .image-popup-close {
-      position: absolute;
-      top: -14px;
-      right: -14px;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: #ffffff;
-      color: #000000;
-      border: none;
-      font-size: 20px;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-      transition: background 0.15s ease, transform 0.15s ease;
-      z-index: 2;
-      padding: 0;
-    }
-    .image-popup-close:hover {
-      background: #00b050;
-      color: #ffffff;
-      transform: scale(1.08);
-    }
-
     @media (max-width: 520px) {
       .back-btn {
         top: 1rem; left: 1rem;
@@ -619,12 +630,105 @@
         padding: 0.55rem 1.3rem 0.55rem 1.1rem;
       }
       .form-wrap { padding-top: 3.2rem; }
-      :root {
-        --popup-image-max-width: 92vw;
-        --popup-image-max-height: 60vh;
-        --popup-padding: 10px;
-      }
     }
+
+
+
+
+/* ===== DESKTOP-ONLY FONT SIZE BOOST ===== */
+@media (min-width: 769px) {
+  body {
+    font-size: 22px;                    /* base bump */
+  }
+  .form-header h1 {
+    font-size: 35px;                    /* main heading */
+  }
+  .form-header p {
+    font-size: 21px;                    /* subtitle */
+  }
+  .section-title {
+    font-size: 19px;                    /* section headers */
+  }
+  .field label {
+    font-size: 21px;                    /* field labels */
+  }
+  .hint {
+    font-size: 14px;                    /* helper text */
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea {
+    font-size: 20px;                    /* input text */
+    padding: 15px 18px;
+  }
+  .custom-select-trigger {
+    font-size: 16px;                    /* dropdown trigger */
+    padding: 12px 14px;
+    min-height: 46px;
+  }
+  .custom-option {
+    font-size: 15px;                    /* dropdown options */
+    padding: 12px 14px;
+  }
+  .size-category-title {
+    font-size: 12px;                    /* Small/Medium/Large titles */
+  }
+
+  .size-preview-wrap {
+  width: calc(100% - 90px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gallery-preview-wrap {
+  width: calc(100% - 90px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+  .size-preview-placeholder {
+    font-size: 14px;
+  }
+  .size-preview-label {
+    font-size: 13px;
+  }
+  .gallery-field > label {
+    font-size: 15px;
+  }
+  .gallery-field > .hint {
+    font-size: 13px;
+  }
+  .gallery-field::before {
+    font-size: 10px;
+  }
+  .size-confirm-btn {
+    font-size: 16px;
+    padding: 14px 18px;
+  }
+  .size-change-link {
+    font-size: 14px;
+  }
+  .submit-btn {
+    font-size: 18px;
+    padding: 20px;
+  }
+  .privacy {
+    font-size: 13px;
+  }
+  .whatsapp-image-message .wa-text strong {
+    font-size: 15px;
+  }
+  .whatsapp-image-message .wa-text p {
+    font-size: 14px;
+  }
+  .contact-lock-note {
+    font-size: 14px;
+  }
+}
+
+
+
   </style>
 </head>
 <body>
@@ -650,12 +754,45 @@
     <div class="section">
       <div class="section-title">Product Details</div>
 
+      <!-- 1) Product Name -->
       <div class="field">
         <label>Product name</label>
         <input type="text" name="product_name" value="Traditional Frame" readonly
                style="background:#f0f0f0; color:#555; cursor:not-allowed;" />
       </div>
 
+      <!-- 2) PRODUCT GALLERY — 58px bottom margin -->
+      <div class="field gallery-field">
+        <label>Product preview <span class="opt">(optional)</span></label>
+        <span class="hint">Tap a thumbnail to preview it. This is just for reference.</span>
+
+        <div class="gallery-preview-wrap" id="galleryPreviewWrap">
+          <img id="galleryPreviewImg"
+               src="https://images.unsplash.com/photo-1615529182904-14819c35db37?w=800&h=800&fit=crop"
+               alt="Product preview" />
+        </div>
+
+        <div class="gallery-thumbs" id="galleryThumbs">
+          <button type="button" class="gallery-thumb active"
+                  data-full="https://images.unsplash.com/photo-1615529182904-14819c35db37?w=800&h=800&fit=crop">
+            <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?w=200&h=200&fit=crop" alt="Preview 1" />
+          </button>
+          <button type="button" class="gallery-thumb"
+                  data-full="https://images.unsplash.com/photo-1618220179428-22790b461013?w=800&h=800&fit=crop">
+            <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?w=200&h=200&fit=crop" alt="Preview 2" />
+          </button>
+          <button type="button" class="gallery-thumb"
+                  data-full="https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=800&h=800&fit=crop">
+            <img src="https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=200&h=200&fit=crop" alt="Preview 3" />
+          </button>
+          <button type="button" class="gallery-thumb"
+                  data-full="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&h=800&fit=crop">
+            <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=200&h=200&fit=crop" alt="Preview 4" />
+          </button>
+        </div>
+      </div>
+
+      <!-- 3) SELECT SIZE -->
       <div class="field">
         <label>1. Select size <span class="req">*</span></label>
         <span class="hint">Pick <strong>one</strong> category and choose a size from it, then click Confirm.</span>
@@ -672,9 +809,6 @@
               <span>Select a size to preview</span>
             </div>
             <span class="size-preview-label" id="sizePreviewLabel"></span>
-            <span class="size-preview-zoom-hint">
-              <i class="fas fa-search-plus"></i> Enlarge
-            </span>
           </div>
 
           <div class="size-categories-row">
@@ -755,7 +889,7 @@
                   </div>
                   <div class="custom-option"
                        data-size-image="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&h=500&fit=crop&sig=9"
-                       data-size-label="Large Square · 14&quot; &times; 14&quot; (1:1)">
+                       data-size-label="Large Square · 14&quot; × 14&quot; (1:1)">
                     Large Square — 1:1
                   </div>
                 </div>
@@ -768,7 +902,7 @@
         </div>
       </div>
 
-      <!-- Q2 — ORIENTATION -->
+      <!-- 4) ORIENTATION -->
       <div class="field">
         <label>2. Orientation <span class="req">*</span></label>
         <span class="hint">Choose the orientation that best fits your artwork or photo.</span>
@@ -784,7 +918,7 @@
         </div>
       </div>
 
-      <!-- Q3 — QUANTITY -->
+      <!-- 5) QUANTITY -->
       <div class="field">
         <label>3. Quantity <span class="req">*</span></label>
         <div class="custom-select" data-name="quantity">
@@ -802,27 +936,48 @@
       </div>
     </div>
 
-    <div class="section">
+    <!-- ============================================================ -->
+    <!-- CONTACT SECTION — locked until all selections are made      -->
+    <!-- ============================================================ -->
+    <div class="section contact-section locked" id="contactSection">
       <div class="section-title">Your Contact Details</div>
+
+      <div class="contact-lock-note">
+        <i class="fas fa-lock"></i>
+        <span>Please complete size, orientation, and quantity selections above to unlock your contact details.</span>
+      </div>
 
       <div class="field">
         <label>Full name <span class="req">*</span></label>
-        <input type="text" name="name" required placeholder="Your full name">
+        <input type="text" name="name" id="contactName" required placeholder="Your full name" disabled>
       </div>
 
       <div class="field">
         <label>Address <span class="req">*</span></label>
-        <input type="text" name="address" required placeholder="Street, city, postal code">
+        <input type="text" name="address" id="contactAddress" required placeholder="Street, city, postal code" disabled>
       </div>
 
       <div class="field">
         <label>Contact number <span class="req">*</span></label>
-        <input type="tel" name="contact_number" required placeholder="+94 70 000 0000">
+        <input type="tel" name="contact_number" id="contactPhone" required placeholder="+94 70 000 0000" disabled>
       </div>
 
       <div class="field">
         <label>Email address <span class="opt">(optional)</span></label>
-        <input type="email" name="email" placeholder="you@example.com">
+        <input type="email" name="email" id="contactEmail" placeholder="you@example.com" disabled>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FURTHER INFORMATION — always unlocked, optional             -->
+    <!-- ============================================================ -->
+    <div class="section">
+      <div class="section-title">Further Information</div>
+
+      <div class="field">
+        <label>Anything else you'd like to add? <span class="opt">(optional)</span></label>
+        <span class="hint">Share any extra details, special requests, or notes about your order.</span>
+        <textarea name="further_information" id="furtherInfo" placeholder="Type your message here..." rows="4"></textarea>
       </div>
     </div>
 
@@ -842,15 +997,27 @@
   </form>
 </div>
 
-<div class="image-popup-overlay" id="imagePopupOverlay" aria-hidden="true" role="dialog" aria-label="Enlarged image">
-  <div class="image-popup-content" id="imagePopupContent">
-    <button type="button" class="image-popup-close" id="imagePopupClose" aria-label="Close image">&times;</button>
-    <img id="imagePopupImg" src="" alt="" />
-    <div class="image-popup-caption" id="imagePopupCaption"></div>
-  </div>
-</div>
-
 <script>
+  /* ============================================================ */
+  /* ===== PRODUCT GALLERY ===== */
+  /* ============================================================ */
+  (function() {
+    const galleryPreviewImg = document.getElementById('galleryPreviewImg');
+    const galleryThumbs = document.getElementById('galleryThumbs');
+
+    if (galleryPreviewImg && galleryThumbs) {
+      galleryThumbs.querySelectorAll('.gallery-thumb').forEach(thumb => {
+        thumb.addEventListener('click', function() {
+          const fullSrc = this.dataset.full;
+          if (!fullSrc) return;
+          galleryPreviewImg.src = fullSrc;
+          galleryThumbs.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    }
+  })();
+
   /* ============================================================ */
   /* ===== STATE ===== */
   /* ============================================================ */
@@ -893,12 +1060,37 @@
   function setCategoryInactive(group, inactive) {
     const cat = getCategoryEl(group);
     if (!cat) return;
-    // Still toggled by the logic (unchanged) — but CSS no longer dims it.
     cat.classList.toggle('inactive', inactive);
   }
 
   /* ============================================================ */
-  /* ===== CORE LOGIC (UNCHANGED) ===== */
+  /* ===== CONTACT SECTION LOCK ===== */
+  /* ============================================================ */
+  const contactSection = document.getElementById('contactSection');
+  const contactInputs = [
+    document.getElementById('contactName'),
+    document.getElementById('contactAddress'),
+    document.getElementById('contactPhone'),
+    document.getElementById('contactEmail')
+  ];
+
+  function updateContactLock() {
+    // Contact unlocks only when size confirmed AND orientation chosen AND quantity chosen
+    const unlocked = sizeConfirmed &&
+                     !!stepValues.orientation &&
+                     !!stepValues.quantity;
+
+    if (unlocked) {
+      contactSection.classList.remove('locked');
+      contactInputs.forEach(inp => { if (inp) inp.disabled = false; });
+    } else {
+      contactSection.classList.add('locked');
+      contactInputs.forEach(inp => { if (inp) inp.disabled = true; });
+    }
+  }
+
+  /* ============================================================ */
+  /* ===== CORE LOGIC ===== */
   /* ============================================================ */
 
   function resetCategory(group) {
@@ -996,21 +1188,17 @@
   function updateStepLocks() {
     setLocked('orientation', !sizeConfirmed);
     setLocked('quantity', !(sizeConfirmed && stepValues.orientation));
+    updateContactLock();
   }
 
   /* ============================================================ */
-  /* ===== SHARED PREVIEW ===== */
+  /* ===== SIZE PREVIEW ===== */
   /* ============================================================ */
   const sizePreviewWrap = document.getElementById('sizePreviewWrap');
   const sizePreviewImg = document.getElementById('sizePreviewImg');
   const sizePreviewLabel = document.getElementById('sizePreviewLabel');
 
-  let currentSizeImage = '';
-  let currentSizeLabel = '';
-
   function showSizePreview(imageSrc, label) {
-    currentSizeImage = imageSrc || '';
-    currentSizeLabel = label || '';
     if (imageSrc) {
       sizePreviewImg.src = imageSrc;
       sizePreviewImg.alt = label || 'Selected frame size';
@@ -1025,12 +1213,9 @@
     sizePreviewImg.src = '';
     sizePreviewImg.alt = '';
     sizePreviewLabel.textContent = '';
-    currentSizeImage = '';
-    currentSizeLabel = '';
     sizePreviewWrap.classList.remove('has-image');
   }
 
-  
   /* ============================================================ */
   /* ===== INITIAL STATE ===== */
   /* ============================================================ */
@@ -1038,6 +1223,7 @@
   setLocked('orientation', true);
   setLocked('quantity', true);
   updateConfirmButtonUI();
+  updateContactLock();
 
   /* ===== CUSTOM DROPDOWNS ===== */
   document.addEventListener('click', function(e) {
@@ -1129,53 +1315,6 @@
     }
   });
 
-  /* ============================================================ */
-  /* ===== IMAGE POP-UP (LIGHTBOX) ===== */
-  /* ============================================================ */
-  let openPopup;
-  (function() {
-    const overlay = document.getElementById('imagePopupOverlay');
-    const popupImg = document.getElementById('imagePopupImg');
-    const popupCaption = document.getElementById('imagePopupCaption');
-    const closeBtn = document.getElementById('imagePopupClose');
-
-    openPopup = function(src, alt, title) {
-      if (!src) return;
-      popupImg.src = src;
-      popupImg.alt = alt || '';
-      popupCaption.textContent = title || alt || '';
-      overlay.classList.add('active');
-      overlay.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-    };
-
-    function closePopup() {
-      overlay.classList.remove('active');
-      overlay.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-      setTimeout(() => {
-        popupImg.src = '';
-        popupImg.alt = '';
-        popupCaption.textContent = '';
-      }, 260);
-    }
-
-    overlay.addEventListener('click', function(e) {
-      if (e.target === overlay) closePopup();
-    });
-
-    closeBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      closePopup();
-    });
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && overlay.classList.contains('active')) {
-        closePopup();
-      }
-    });
-  })();
-
   /* ===== FORMSPREE AJAX SUBMIT ===== */
   document.getElementById('revenueForm').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -1242,6 +1381,13 @@
         });
         updateConfirmButtonUI();
         updateStepLocks();
+
+        const firstThumb = document.querySelector('#galleryThumbs .gallery-thumb');
+        if (firstThumb && galleryPreviewImg) {
+          galleryPreviewImg.src = firstThumb.dataset.full;
+          document.querySelectorAll('#galleryThumbs .gallery-thumb').forEach(t => t.classList.remove('active'));
+          firstThumb.classList.add('active');
+        }
 
       } else {
         const data = await response.json();
