@@ -121,6 +121,90 @@
       line-height: 1.4;
     }
 
+    /* ===== SIZE PREVIEW IMAGE (above the size dropdown) ===== */
+    .size-preview-wrap {
+      position: relative;
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #f5f5f5;
+      border: 1.5px solid #e5e5e5;
+      margin-bottom: 12px;
+      aspect-ratio: 16 / 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s ease;
+    }
+    .size-preview-wrap.has-image {
+      border-color: #00b050;
+      cursor: zoom-in;
+    }
+    .size-preview-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.25s ease;
+    }
+    .size-preview-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #999;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: center;
+      padding: 20px;
+      pointer-events: none;
+    }
+    .size-preview-placeholder svg {
+      width: 40px;
+      height: 40px;
+      opacity: 0.4;
+    }
+    .size-preview-wrap.has-image .size-preview-placeholder {
+      display: none;
+    }
+    .size-preview-label {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.02em;
+      display: none;
+      pointer-events: none;
+    }
+    .size-preview-wrap.has-image .size-preview-label {
+      display: block;
+    }
+    .size-preview-zoom-hint {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 20px;
+      display: none;
+      pointer-events: none;
+      gap: 4px;
+      align-items: center;
+    }
+    .size-preview-wrap.has-image .size-preview-zoom-hint {
+      display: flex;
+    }
+
     .custom-select { position: relative; user-select: none; }
 
     .custom-select-trigger {
@@ -474,94 +558,110 @@
                style="background:#f0f0f0; color:#555; cursor:not-allowed;" />
       </div>
 
-      <!-- Q1 — ORIENTATION -->
+      <!-- Q1 — SELECT SIZE (image preview ABOVE the dropdown) -->
       <div class="field">
-        <label>1. Orientation <span class="req">*</span></label>
-        <span class="hint">Choose the orientation that best fits your artwork or photo.</span>
-        <div class="custom-select" data-name="orientation" data-step="1">
-          <div class="custom-select-trigger">
-            <span class="placeholder">Select orientation</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </div>
-          <div class="custom-options">
-            <!-- data-orientation lets the size filter identify these reliably -->
-            <div class="custom-option" data-orientation="portrait">Portrait (tall)</div>
-            <div class="custom-option" data-orientation="landscape">Landscape (wide)</div>
-            <div class="custom-option" data-orientation="square">Square</div>
-          </div>
-        </div>
-      </div>
+        <label>1. Select size <span class="req">*</span></label>
+        <span class="hint">Pick a size below — the image updates to show your chosen size.</span>
 
-      <!-- Q2 — SIZE SELECTION -->
-      <div class="field">
-        <label>2. Select size <span class="req">*</span></label>
-        <span class="hint">Choose the frame size that fits your artwork or photo.</span>
-        <div class="custom-select" data-name="frame_size" data-step="2">
+        <!-- Image preview area (shows the selected size's image) -->
+        <div class="size-preview-wrap" id="sizePreviewWrap">
+          <img id="sizePreviewImg" src="" alt="" />
+          <div class="size-preview-placeholder" id="sizePreviewPlaceholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span>Select a size to see it here</span>
+          </div>
+          <span class="size-preview-label" id="sizePreviewLabel"></span>
+          <span class="size-preview-zoom-hint">
+            <i class="fas fa-search-plus"></i> Click to enlarge
+          </span>
+        </div>
+
+        <!-- Size dropdown with 9 sizes -->
+        <div class="custom-select" data-name="frame_size" data-step="1">
           <div class="custom-select-trigger">
             <span class="placeholder">Select size</span>
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="custom-options">
-            <!-- Portrait options -->
-            <div class="custom-option" data-orientation="portrait">
+            <!-- ============================================================ -->
+            <!-- 9 SIZE OPTIONS — EACH HAS ITS OWN INDEPENDENT IMAGE URL       -->
+            <!-- Just replace the data-size-image value to change that size's -->
+            <!-- image. Each one can be a completely different URL.           -->
+            <!-- ============================================================ -->
+
+            <div class="custom-option"
+                 data-size-image="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&h=500&fit=crop&sig=1"
+                 data-size-label="Small Portrait · 8&quot; × 10&quot; (4:5)">
               Small Portrait — 4:5 ratio (approx. 8" × 10")
             </div>
-            <div class="custom-option" data-orientation="portrait">
+            <div class="custom-option"
+                 data-size-image="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&h=500&fit=crop&sig=2"
+                 data-size-label="Medium Portrait · 12&quot; × 16&quot; (3:4)">
               Medium Portrait — 3:4 ratio (approx. 12" × 16")
             </div>
-            <div class="custom-option" data-orientation="portrait">
+            <div class="custom-option"
+                 data-size-image="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&h=500&fit=crop&sig=3"
+                 data-size-label="Large Portrait · 16&quot; × 24&quot; (2:3)">
               Large Portrait — 2:3 ratio (approx. 16" × 24")
             </div>
-            <!-- Landscape options -->
-            <div class="custom-option" data-orientation="landscape">
+            <div class="custom-option"
+                 data-size-image="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&h=500&fit=crop&sig=4"
+                 data-size-label="Small Landscape · 10&quot; × 8&quot; (5:4)">
               Small Landscape — 5:4 ratio (approx. 10" × 8")
             </div>
-            <div class="custom-option" data-orientation="landscape">
+            <div class="custom-option"
+                 data-size-image="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&h=500&fit=crop&sig=5"
+                 data-size-label="Medium Landscape · 16&quot; × 12&quot; (4:3)">
               Medium Landscape — 4:3 ratio (approx. 16" × 12")
             </div>
-            <div class="custom-option" data-orientation="landscape">
+            <div class="custom-option"
+                 data-size-image="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&h=500&fit=crop&sig=6"
+                 data-size-label="Large Landscape · 24&quot; × 16&quot; (3:2)">
               Large Landscape — 3:2 ratio (approx. 24" × 16")
             </div>
-            <!-- Square options: 3 separate sizes -->
-            <div class="custom-option" data-orientation="square">
+            <div class="custom-option"
+                 data-size-image="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&h=500&fit=crop&sig=7"
+                 data-size-label="Square Small · 6&quot; × 6&quot; (1:1)">
               Square Small — 1:1 ratio (approx. 6" × 6")
             </div>
-            <div class="custom-option" data-orientation="square">
+            <div class="custom-option"
+                 data-size-image="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&h=500&fit=crop&sig=8"
+                 data-size-label="Square Medium · 10&quot; × 10&quot; (1:1)">
               Square Medium — 1:1 ratio (approx. 10" × 10")
             </div>
-            <div class="custom-option" data-orientation="square">
+            <div class="custom-option"
+                 data-size-image="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&h=500&fit=crop&sig=9"
+                 data-size-label="Square Large · 14&quot; × 14&quot; (1:1)">
               Square Large — 1:1 ratio (approx. 14" × 14")
-            </div>
-            <!-- Custom size always available -->
-            <div class="custom-option" data-other="true" data-orientation="any">
-              Custom size (specify)
             </div>
           </div>
         </div>
-        <div class="other-input"><input type="text" placeholder="e.g. 9 × 13 inches, or custom dimensions"></div>
       </div>
 
-      <!-- Q3 — QUANTITY -->
+      <!-- Q2 — ORIENTATION (Portrait / Landscape only) -->
       <div class="field">
-        <label>3. Quantity <span class="req">*</span></label>
-        <div class="custom-select" data-name="quantity" data-step="3">
+        <label>2. Orientation <span class="req">*</span></label>
+        <span class="hint">Choose the orientation that best fits your artwork or photo.</span>
+        <div class="custom-select" data-name="orientation" data-step="2">
           <div class="custom-select-trigger">
-            <span class="placeholder">Select quantity</span>
+            <span class="placeholder">Select orientation</span>
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="custom-options">
-            <div class="custom-option">1 frame</div>
-            <div class="custom-option">2 – 5 frames</div>
-            <div class="custom-option">6 – 10 frames</div>
-            <div class="custom-option">11+ frames (bulk)</div>
+            <div class="custom-option" data-orientation="portrait">Portrait (tall)</div>
+            <div class="custom-option" data-orientation="landscape">Landscape (wide)</div>
           </div>
         </div>
       </div>
 
-      <!-- Q4 — FRAME FINISH (with clickable images) -->
+      <!-- Q3 — FRAME FINISH (with clickable images) -->
       <div class="field">
-        <label>4. Preferred frame finish <span class="opt">(optional)</span></label>
-        <div class="custom-select" data-name="frame_finish" data-step="4">
+        <label>3. Preferred frame finish <span class="opt">(optional)</span></label>
+        <div class="custom-select" data-name="frame_finish" data-step="3">
           <div class="custom-select-trigger">
             <span class="placeholder">Select finish</span>
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -634,6 +734,23 @@
         </div>
         <div class="other-input"><input type="text" placeholder="Please specify"></div>
       </div>
+
+      <!-- Q4 — QUANTITY -->
+      <div class="field">
+        <label>4. Quantity <span class="req">*</span></label>
+        <div class="custom-select" data-name="quantity" data-step="4">
+          <div class="custom-select-trigger">
+            <span class="placeholder">Select quantity</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="custom-options">
+            <div class="custom-option">1 frame</div>
+            <div class="custom-option">2 – 5 frames</div>
+            <div class="custom-option">6 – 10 frames</div>
+            <div class="custom-option">11+ frames (bulk)</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- CONTACT DETAILS -->
@@ -670,7 +787,7 @@
 <!-- ============================================================ -->
 <!-- ===== IMAGE POP-UP (LIGHTBOX) MARKUP ===== -->
 <!-- ============================================================ -->
-<div class="image-popup-overlay" id="imagePopupOverlay" aria-hidden="true" role="dialog" aria-label="Enlarged frame finish image">
+<div class="image-popup-overlay" id="imagePopupOverlay" aria-hidden="true" role="dialog" aria-label="Enlarged image">
   <div class="image-popup-content" id="imagePopupContent">
     <button type="button" class="image-popup-close" id="imagePopupClose" aria-label="Close image">&times;</button>
     <img id="imagePopupImg" src="" alt="" />
@@ -683,17 +800,17 @@
   /* ===== STEP SEQUENCING (selections in order) ===== */
   /* ============================================================ */
   const STEP_ORDER = {
-    1: 'orientation',
-    2: 'frame_size',
-    3: 'quantity',
-    4: 'frame_finish'
+    1: 'frame_size',
+    2: 'orientation',
+    3: 'frame_finish',
+    4: 'quantity'
   };
 
   let stepValues = {
-    orientation: '',
     frame_size: '',
-    quantity: '',
-    frame_finish: ''
+    orientation: '',
+    frame_finish: '',
+    quantity: ''
   };
 
   function getSelect(name) {
@@ -707,11 +824,54 @@
   }
 
   function updateStepLocks() {
-    setLocked('orientation', false);
-    setLocked('frame_size', !stepValues.orientation);
-    setLocked('quantity', !(stepValues.orientation && stepValues.frame_size));
-    setLocked('frame_finish', !(stepValues.orientation && stepValues.frame_size && stepValues.quantity));
+    setLocked('frame_size', false);
+    setLocked('orientation', !stepValues.frame_size);
+    setLocked('frame_finish', !(stepValues.frame_size && stepValues.orientation));
+    setLocked('quantity', !(stepValues.frame_size && stepValues.orientation && stepValues.frame_finish));
   }
+
+  /* --- Size preview image helpers --- */
+  const sizePreviewWrap = document.getElementById('sizePreviewWrap');
+  const sizePreviewImg = document.getElementById('sizePreviewImg');
+  const sizePreviewLabel = document.getElementById('sizePreviewLabel');
+
+  let currentSizeImage = '';
+  let currentSizeLabel = '';
+
+  function showSizePreview(imageSrc, label) {
+    currentSizeImage = imageSrc || '';
+    currentSizeLabel = label || '';
+    if (imageSrc) {
+      sizePreviewImg.src = imageSrc;
+      sizePreviewImg.alt = label || 'Selected frame size';
+      sizePreviewLabel.textContent = label || '';
+      sizePreviewWrap.classList.add('has-image');
+    } else {
+      clearSizePreview();
+    }
+  }
+
+  function clearSizePreview() {
+    sizePreviewImg.src = '';
+    sizePreviewImg.alt = '';
+    sizePreviewLabel.textContent = '';
+    currentSizeImage = '';
+    currentSizeLabel = '';
+    sizePreviewWrap.classList.remove('has-image');
+  }
+
+  // Click the preview to enlarge
+  sizePreviewWrap.addEventListener('click', function() {
+    if (!currentSizeImage) return;
+    openPopup(currentSizeImage, currentSizeLabel, currentSizeLabel);
+  });
+  sizePreviewWrap.setAttribute('tabindex', '0');
+  sizePreviewWrap.addEventListener('keydown', function(e) {
+    if ((e.key === 'Enter' || e.key === ' ') && currentSizeImage) {
+      e.preventDefault();
+      openPopup(currentSizeImage, currentSizeLabel, currentSizeLabel);
+    }
+  });
 
   function resetStepsFrom(stepNum) {
     for (let i = stepNum; i <= 4; i++) {
@@ -723,10 +883,10 @@
           const trigger = sel.querySelector('.custom-select-trigger');
           const valueSpan = trigger.querySelector('.value, .placeholder');
           if (valueSpan) {
-            valueSpan.textContent = name === 'orientation' ? 'Select orientation'
-              : name === 'frame_size' ? 'Select size'
-              : name === 'quantity' ? 'Select quantity'
-              : 'Select finish';
+            valueSpan.textContent = name === 'frame_size' ? 'Select size'
+              : name === 'orientation' ? 'Select orientation'
+              : name === 'frame_finish' ? 'Select finish'
+              : 'Select quantity';
             valueSpan.classList.remove('value');
             valueSpan.classList.add('placeholder');
           }
@@ -736,16 +896,8 @@
         }
       }
     }
+    if (stepNum <= 1) clearSizePreview();
     document.querySelectorAll('.other-input.show').forEach(el => el.classList.remove('show'));
-
-    // Hide all non-custom size options until orientation is chosen again
-    const sizeSel = getSelect('frame_size');
-    if (sizeSel) {
-      sizeSel.querySelectorAll('.custom-option').forEach(opt => {
-        opt.style.display = (opt.dataset.orientation === 'any') ? '' : 'none';
-      });
-    }
-
     updateStepLocks();
   }
 
@@ -798,39 +950,11 @@
 
         stepValues[selectName] = value;
 
-        /* --- ORIENTATION: filter size options using the reliable data-orientation value --- */
-        if (selectName === 'orientation') {
-          const chosenOrientation = option.dataset.orientation; // 'portrait' | 'landscape' | 'square'
-
-          const sizeSelect = document.querySelector('[data-name="frame_size"]');
-          if (sizeSelect) {
-            const sizeOptions = sizeSelect.querySelectorAll('.custom-option');
-            sizeOptions.forEach(opt => {
-              const optOrientation = opt.dataset.orientation;
-              // Show options matching the chosen orientation, plus "any" (custom size)
-              if (optOrientation === chosenOrientation || optOrientation === 'any') {
-                opt.style.display = '';
-              } else {
-                opt.style.display = 'none';
-              }
-            });
-
-            // If a previously selected size is now hidden, reset size + downstream steps
-            const currentSelectedSize = sizeSelect.querySelector('.custom-option.selected');
-            if (currentSelectedSize && currentSelectedSize.style.display === 'none') {
-              currentSelectedSize.classList.remove('selected');
-              const sizeValueSpan = sizeSelect.querySelector('.custom-select-trigger .value');
-              if (sizeValueSpan) {
-                sizeValueSpan.textContent = 'Select size';
-                sizeValueSpan.classList.remove('value');
-                sizeValueSpan.classList.add('placeholder');
-              }
-              const sizeHidden = sizeSelect.querySelector('input[type="hidden"]');
-              if (sizeHidden) sizeHidden.value = '';
-              stepValues['frame_size'] = '';
-              resetStepsFrom(3);
-            }
-          }
+        /* --- For SIZE dropdown: update the preview image above --- */
+        if (selectName === 'frame_size') {
+          const img = option.dataset.sizeImage || '';
+          const label = option.dataset.sizeLabel || value;
+          showSizePreview(img, label);
         }
 
         /* --- Handle "Other" input --- */
@@ -850,16 +974,6 @@
     });
   });
 
-  /* --- Initialise size options: only "Custom size" visible until orientation chosen --- */
-  (function initSizeFilter() {
-    const sizeSelect = document.querySelector('[data-name="frame_size"]');
-    if (sizeSelect) {
-      sizeSelect.querySelectorAll('.custom-option').forEach(opt => {
-        opt.style.display = (opt.dataset.orientation === 'any') ? '' : 'none';
-      });
-    }
-  })();
-
   /* ===== NAME THE "OTHER" INPUTS ===== */
   document.querySelectorAll('.other-input input').forEach((input, i) => {
     if (!input.name) {
@@ -872,20 +986,22 @@
   /* ============================================================ */
   /* ===== IMAGE POP-UP (LIGHTBOX) LOGIC ===== */
   /* ============================================================ */
+  let openPopup;
   (function() {
     const overlay = document.getElementById('imagePopupOverlay');
     const popupImg = document.getElementById('imagePopupImg');
     const popupCaption = document.getElementById('imagePopupCaption');
     const closeBtn = document.getElementById('imagePopupClose');
 
-    function openPopup(src, alt, title) {
+    openPopup = function(src, alt, title) {
+      if (!src) return;
       popupImg.src = src;
       popupImg.alt = alt || '';
       popupCaption.textContent = title || alt || '';
       overlay.classList.add('active');
       overlay.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
-    }
+    };
 
     function closePopup() {
       overlay.classList.remove('active');
@@ -945,20 +1061,21 @@
         form.reset();
 
         stepValues = {
-          orientation: '',
           frame_size: '',
-          quantity: '',
-          frame_finish: ''
+          orientation: '',
+          frame_finish: '',
+          quantity: ''
         };
+        clearSizePreview();
 
         form.querySelectorAll('.custom-select-trigger .value, .custom-select-trigger .placeholder').forEach(el => {
           const sel = el.closest('.custom-select');
           if (sel) {
             const name = sel.dataset.name;
-            el.textContent = name === 'orientation' ? 'Select orientation'
-              : name === 'frame_size' ? 'Select size'
-              : name === 'quantity' ? 'Select quantity'
-              : 'Select finish';
+            el.textContent = name === 'frame_size' ? 'Select size'
+              : name === 'orientation' ? 'Select orientation'
+              : name === 'frame_finish' ? 'Select finish'
+              : 'Select quantity';
           } else {
             el.textContent = 'Select';
           }
@@ -972,14 +1089,6 @@
         });
         const prodName = form.querySelector('input[name="product_name"]');
         if (prodName) prodName.value = 'Traditional Frame';
-
-        // Reset size options: hide all except custom
-        const sizeSelect = document.querySelector('[data-name="frame_size"]');
-        if (sizeSelect) {
-          sizeSelect.querySelectorAll('.custom-option').forEach(opt => {
-            opt.style.display = (opt.dataset.orientation === 'any') ? '' : 'none';
-          });
-        }
 
         updateStepLocks();
 
