@@ -13,11 +13,11 @@
     /* 👇👇👇  IMAGE POP-UP SIZE CONTROLS — EDIT THESE VALUES  👇👇👇 */
     /* ============================================================ */
     :root {
-      --popup-image-max-width: 480px;   /* max width of the enlarged image */
-      --popup-image-max-height: 70vh;   /* max height (keeps it on screen) */
-      --popup-backdrop-color: rgba(0, 0, 0, 0.75); /* dark overlay behind the image */
-      --popup-border-radius: 16px;      /* rounded corners of the enlarged image */
-      --popup-padding: 16px;            /* padding around the image inside the modal */
+      --popup-image-max-width: 480px;
+      --popup-image-max-height: 70vh;
+      --popup-backdrop-color: rgba(0, 0, 0, 0.75);
+      --popup-border-radius: 16px;
+      --popup-padding: 16px;
     }
     /* ============================================================ */
 
@@ -29,7 +29,6 @@
       padding: 24px 16px 60px;
     }
 
-    /* ===== FIXED BACK BUTTON — top-left corner ===== */
     .back-btn {
       position: fixed;
       top: 1.5rem;
@@ -113,18 +112,6 @@
     .field label .req { color: #ff4d6d; margin-left: 2px; }
     .field label .opt { color: #999; font-weight: 400; font-size: 12px; margin-left: 4px; }
 
-    .sub-label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: #888;
-      margin-bottom: 6px;
-      margin-top: 12px;
-    }
-    .sub-label:first-of-type { margin-top: 0; }
-
     .hint {
       display: block;
       font-size: 12px;
@@ -132,15 +119,6 @@
       margin-top: -4px;
       margin-bottom: 8px;
       line-height: 1.4;
-    }
-
-    .row { display: grid; gap: 12px; }
-    .row-2 { grid-template-columns: 1fr 1fr; }
-    .row-3 { grid-template-columns: 1fr 1fr 1fr; }
-    .row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-
-    @media (max-width: 520px) {
-      .row-2, .row-3, .row-4 { grid-template-columns: 1fr; }
     }
 
     .custom-select { position: relative; user-select: none; }
@@ -176,6 +154,22 @@
       transition: transform 0.25s ease;
     }
     .custom-select.open .chevron { transform: rotate(180deg); }
+
+    /* ===== LOCKED STATE ===== */
+    .custom-select.locked .custom-select-trigger {
+      background: #f0f0f0;
+      color: #aaa;
+      cursor: not-allowed;
+      border-color: #e5e5e5;
+      opacity: 0.6;
+    }
+    .custom-select.locked .custom-select-trigger .placeholder,
+    .custom-select.locked .custom-select-trigger .value { color: #aaa; }
+    .custom-select.locked .custom-select-trigger:hover {
+      border-color: #e5e5e5;
+      background: #f0f0f0;
+    }
+    .custom-select.locked .custom-select-trigger .chevron { opacity: 0.4; }
 
     .custom-options {
       position: absolute;
@@ -317,65 +311,6 @@
       box-shadow: 0 0 0 4px rgba(0, 176, 80, 0.1);
     }
 
-    .colour-picker {
-      display: none;
-      margin-top: 12px;
-      padding: 14px;
-      background: #fafafa;
-      border: 1.5px dashed #e0e0e0;
-      border-radius: 14px;
-    }
-    .colour-picker.show { display: block; animation: slideDown 0.25s ease; }
-    .colour-picker-label {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
-      text-transform: uppercase; color: #888;
-      margin-bottom: 10px; display: block;
-    }
-    .colour-swatches { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-    .colour-swatch {
-      width: 44px; height: 44px; border-radius: 12px;
-      border: 2px solid #e5e5e5;
-      cursor: pointer; position: relative;
-      overflow: visible;
-      transition: transform 0.15s, border-color 0.2s;
-      background: #ffffff;
-    }
-    .colour-swatch:hover { transform: scale(1.05); border-color: #00b050; }
-    .colour-swatch input[type="color"] {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      border: none; padding: 0; cursor: pointer;
-      opacity: 0; border-radius: 10px;
-    }
-    .colour-swatch .colour-fill {
-      position: absolute; inset: 0; border-radius: 10px;
-      background: #ffffff; pointer-events: none;
-    }
-    .colour-swatch .colour-remove {
-      position: absolute; top: -6px; right: -6px;
-      width: 18px; height: 18px; border-radius: 50%;
-      background: #ff4d6d; color: #fff;
-      border: 2px solid #fff; font-size: 11px; line-height: 1;
-      display: none; align-items: center; justify-content: center;
-      cursor: pointer; z-index: 2; padding: 0;
-    }
-    .colour-swatch.filled .colour-remove { display: flex; }
-    .add-colour-btn {
-      width: 44px; height: 44px; border-radius: 12px;
-      border: 2px dashed #d0d0d0; background: #ffffff;
-      color: #888; font-size: 20px; font-weight: 300;
-      cursor: pointer; transition: all 0.2s;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .add-colour-btn:hover { border-color: #00b050; color: #00b050; background: #f0fdf6; }
-    .add-colour-btn.hidden { display: none; }
-    .colour-hex { font-size: 12px; color: #888; margin-top: 8px; }
-    .colour-text-input { margin-top: 12px; }
-    .colour-text-input label {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
-      text-transform: uppercase; color: #888;
-      margin-bottom: 6px; display: block;
-    }
-
     .submit-btn {
       width: 100%;
       padding: 18px;
@@ -501,7 +436,7 @@
       }
       .form-wrap { padding-top: 3.2rem; }
       :root {
-        --popup-image-max-width: 92vw;   /* bigger relative to screen on mobile */
+        --popup-image-max-width: 92vw;
         --popup-image-max-height: 60vh;
         --popup-padding: 10px;
       }
@@ -521,9 +456,6 @@
     <p>Tell us about your frame needs. We'll get back to you with the perfect solution.</p>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- 👇👇👇  REPLACE "YOUR_FORM_ID" WITH YOUR FORMSPREE ID  👇👇👇 -->
-  <!-- ============================================================ -->
   <form id="revenueForm"
         action="https://formspree.io/f/xjygjzbd"
         method="POST">
@@ -542,28 +474,29 @@
                style="background:#f0f0f0; color:#555; cursor:not-allowed;" />
       </div>
 
-      <!-- Q1 — ORIENTATION: Portrait / Landscape / Square -->
+      <!-- Q1 — ORIENTATION -->
       <div class="field">
         <label>1. Orientation <span class="req">*</span></label>
         <span class="hint">Choose the orientation that best fits your artwork or photo.</span>
-        <div class="custom-select" data-name="orientation">
+        <div class="custom-select" data-name="orientation" data-step="1">
           <div class="custom-select-trigger">
             <span class="placeholder">Select orientation</span>
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="custom-options">
-            <div class="custom-option">Portrait (tall)</div>
-            <div class="custom-option">Landscape (wide)</div>
-            <div class="custom-option">Square</div>
+            <!-- data-orientation lets the size filter identify these reliably -->
+            <div class="custom-option" data-orientation="portrait">Portrait (tall)</div>
+            <div class="custom-option" data-orientation="landscape">Landscape (wide)</div>
+            <div class="custom-option" data-orientation="square">Square</div>
           </div>
         </div>
       </div>
 
-      <!-- Q2 — SIZE SELECTION (varies by orientation) -->
+      <!-- Q2 — SIZE SELECTION -->
       <div class="field">
         <label>2. Select size <span class="req">*</span></label>
         <span class="hint">Choose the frame size that fits your artwork or photo.</span>
-        <div class="custom-select" data-name="frame_size">
+        <div class="custom-select" data-name="frame_size" data-step="2">
           <div class="custom-select-trigger">
             <span class="placeholder">Select size</span>
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -611,7 +544,7 @@
       <!-- Q3 — QUANTITY -->
       <div class="field">
         <label>3. Quantity <span class="req">*</span></label>
-        <div class="custom-select" data-name="quantity">
+        <div class="custom-select" data-name="quantity" data-step="3">
           <div class="custom-select-trigger">
             <span class="placeholder">Select quantity</span>
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -628,7 +561,7 @@
       <!-- Q4 — FRAME FINISH (with clickable images) -->
       <div class="field">
         <label>4. Preferred frame finish <span class="opt">(optional)</span></label>
-        <div class="custom-select" data-name="frame_finish">
+        <div class="custom-select" data-name="frame_finish" data-step="4">
           <div class="custom-select-trigger">
             <span class="placeholder">Select finish</span>
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -701,35 +634,6 @@
         </div>
         <div class="other-input"><input type="text" placeholder="Please specify"></div>
       </div>
-
-      <!-- Q5 — BRAND COLOURS (optional) -->
-      <div class="field">
-        <label>5. Do you have brand colours for the frame? <span class="opt">(optional)</span></label>
-        <div class="custom-select" data-name="brand_colours" data-colour-picker="true">
-          <div class="custom-select-trigger">
-            <span class="placeholder">Select</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </div>
-          <div class="custom-options">
-            <div class="custom-option" data-show-colours="true">Yes, I have specific colours</div>
-            <div class="custom-option">No, you decide for me</div>
-            <div class="custom-option">I have colours but want suggestions</div>
-          </div>
-        </div>
-
-        <div class="colour-picker" id="colourPicker">
-          <span class="colour-picker-label">Pick your brand colours</span>
-          <div class="colour-swatches" id="colourSwatches">
-            <button type="button" class="add-colour-btn" id="addColourBtn">+</button>
-          </div>
-          <div class="colour-hex" id="colourHex">No colours added yet</div>
-
-          <div class="colour-text-input">
-            <label>Or write your colours in words <span class="opt">(optional)</span></label>
-            <input type="text" id="colourText" name="brand_colours_text" placeholder="e.g. Navy blue, gold, and white">
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- CONTACT DETAILS -->
@@ -757,8 +661,6 @@
       </div>
     </div>
 
-    <input type="hidden" name="brand_colours_picked" id="brandColoursPicked" value="">
-
     <button type="submit" class="submit-btn">Get My Frame Quote →</button>
     <p class="privacy">We respect your privacy. We'll WhatsApp or email you within 24 hours.</p>
 
@@ -777,6 +679,78 @@
 </div>
 
 <script>
+  /* ============================================================ */
+  /* ===== STEP SEQUENCING (selections in order) ===== */
+  /* ============================================================ */
+  const STEP_ORDER = {
+    1: 'orientation',
+    2: 'frame_size',
+    3: 'quantity',
+    4: 'frame_finish'
+  };
+
+  let stepValues = {
+    orientation: '',
+    frame_size: '',
+    quantity: '',
+    frame_finish: ''
+  };
+
+  function getSelect(name) {
+    return document.querySelector(`.custom-select[data-name="${name}"]`);
+  }
+
+  function setLocked(name, locked) {
+    const sel = getSelect(name);
+    if (!sel) return;
+    sel.classList.toggle('locked', locked);
+  }
+
+  function updateStepLocks() {
+    setLocked('orientation', false);
+    setLocked('frame_size', !stepValues.orientation);
+    setLocked('quantity', !(stepValues.orientation && stepValues.frame_size));
+    setLocked('frame_finish', !(stepValues.orientation && stepValues.frame_size && stepValues.quantity));
+  }
+
+  function resetStepsFrom(stepNum) {
+    for (let i = stepNum; i <= 4; i++) {
+      const name = STEP_ORDER[i];
+      if (name) {
+        stepValues[name] = '';
+        const sel = getSelect(name);
+        if (sel) {
+          const trigger = sel.querySelector('.custom-select-trigger');
+          const valueSpan = trigger.querySelector('.value, .placeholder');
+          if (valueSpan) {
+            valueSpan.textContent = name === 'orientation' ? 'Select orientation'
+              : name === 'frame_size' ? 'Select size'
+              : name === 'quantity' ? 'Select quantity'
+              : 'Select finish';
+            valueSpan.classList.remove('value');
+            valueSpan.classList.add('placeholder');
+          }
+          sel.querySelectorAll('.custom-option').forEach(o => o.classList.remove('selected'));
+          const hidden = sel.querySelector('input[type="hidden"]');
+          if (hidden) hidden.value = '';
+        }
+      }
+    }
+    document.querySelectorAll('.other-input.show').forEach(el => el.classList.remove('show'));
+
+    // Hide all non-custom size options until orientation is chosen again
+    const sizeSel = getSelect('frame_size');
+    if (sizeSel) {
+      sizeSel.querySelectorAll('.custom-option').forEach(opt => {
+        opt.style.display = (opt.dataset.orientation === 'any') ? '' : 'none';
+      });
+    }
+
+    updateStepLocks();
+  }
+
+  updateStepLocks();
+
   /* ===== CUSTOM DROPDOWNS + HIDDEN INPUT SYNC ===== */
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.custom-select')) {
@@ -784,13 +758,11 @@
     }
   });
 
-  /* --- Track selected orientation to filter size options --- */
-  let selectedOrientation = null;
-
   document.querySelectorAll('.custom-select').forEach(select => {
     const trigger = select.querySelector('.custom-select-trigger');
     const placeholder = trigger.querySelector('.placeholder');
     const options = select.querySelectorAll('.custom-option');
+    const selectName = select.dataset.name;
 
     const hidden = document.createElement('input');
     hidden.type = 'hidden';
@@ -799,6 +771,7 @@
 
     trigger.addEventListener('click', function(e) {
       e.stopPropagation();
+      if (select.classList.contains('locked')) return;
       const isOpen = select.classList.contains('open');
       document.querySelectorAll('.custom-select.open').forEach(el => el.classList.remove('open'));
       if (!isOpen) select.classList.add('open');
@@ -807,7 +780,8 @@
     options.forEach(option => {
       option.addEventListener('click', function(e) {
         e.stopPropagation();
-        // Determine display value: for image options, use the .option-name text
+        if (select.classList.contains('locked')) return;
+
         const nameEl = option.querySelector('.option-name');
         const value = nameEl ? nameEl.textContent.trim() : option.textContent.trim();
 
@@ -822,48 +796,44 @@
 
         hidden.value = value;
 
-        /* --- If this is the orientation dropdown, filter size options --- */
-        if (select.dataset.name === 'orientation') {
-          const optText = value.toLowerCase();
-          if (optText.includes('portrait')) {
-            selectedOrientation = 'portrait';
-          } else if (optText.includes('landscape')) {
-            selectedOrientation = 'landscape';
-          } else if (optText.includes('square')) {
-            selectedOrientation = 'square';
-          } else {
-            selectedOrientation = null;
-          }
+        stepValues[selectName] = value;
+
+        /* --- ORIENTATION: filter size options using the reliable data-orientation value --- */
+        if (selectName === 'orientation') {
+          const chosenOrientation = option.dataset.orientation; // 'portrait' | 'landscape' | 'square'
 
           const sizeSelect = document.querySelector('[data-name="frame_size"]');
           if (sizeSelect) {
             const sizeOptions = sizeSelect.querySelectorAll('.custom-option');
             sizeOptions.forEach(opt => {
               const optOrientation = opt.dataset.orientation;
-              if (optOrientation === selectedOrientation || optOrientation === 'any') {
+              // Show options matching the chosen orientation, plus "any" (custom size)
+              if (optOrientation === chosenOrientation || optOrientation === 'any') {
                 opt.style.display = '';
               } else {
                 opt.style.display = 'none';
               }
             });
 
-            // Reset size selection if currently selected size is now hidden
+            // If a previously selected size is now hidden, reset size + downstream steps
             const currentSelectedSize = sizeSelect.querySelector('.custom-option.selected');
             if (currentSelectedSize && currentSelectedSize.style.display === 'none') {
               currentSelectedSize.classList.remove('selected');
-              const sizePlaceholder = sizeSelect.querySelector('.custom-select-trigger .value');
-              if (sizePlaceholder) {
-                sizePlaceholder.textContent = 'Select size';
-                sizePlaceholder.classList.remove('value');
-                sizePlaceholder.classList.add('placeholder');
+              const sizeValueSpan = sizeSelect.querySelector('.custom-select-trigger .value');
+              if (sizeValueSpan) {
+                sizeValueSpan.textContent = 'Select size';
+                sizeValueSpan.classList.remove('value');
+                sizeValueSpan.classList.add('placeholder');
               }
               const sizeHidden = sizeSelect.querySelector('input[type="hidden"]');
               if (sizeHidden) sizeHidden.value = '';
+              stepValues['frame_size'] = '';
+              resetStepsFrom(3);
             }
           }
         }
 
-        // Handle "Other" input
+        /* --- Handle "Other" input --- */
         const directOther = select.parentElement.querySelector('.other-input');
         if (directOther) {
           if (option.dataset.other === 'true') {
@@ -875,28 +845,17 @@
           }
         }
 
-        // Handle conditional issues (none here, but kept for safety)
-        if (select.dataset.conditional === 'true') {
-          const issuesBlock = select.closest('.field').querySelector('.conditional-issues');
-          if (issuesBlock) {
-            issuesBlock.style.display = option.dataset.showIssues === 'true' ? 'block' : 'none';
-          }
-        }
+        updateStepLocks();
       });
     });
   });
 
-  /* --- Initialise size options: hide all except "custom size" until orientation is chosen --- */
+  /* --- Initialise size options: only "Custom size" visible until orientation chosen --- */
   (function initSizeFilter() {
     const sizeSelect = document.querySelector('[data-name="frame_size"]');
     if (sizeSelect) {
-      const sizeOptions = sizeSelect.querySelectorAll('.custom-option');
-      sizeOptions.forEach(opt => {
-        if (opt.dataset.orientation === 'any') {
-          opt.style.display = '';
-        } else {
-          opt.style.display = 'none';
-        }
+      sizeSelect.querySelectorAll('.custom-option').forEach(opt => {
+        opt.style.display = (opt.dataset.orientation === 'any') ? '' : 'none';
       });
     }
   })();
@@ -909,88 +868,6 @@
       input.name = base + '_other';
     }
   });
-
-  /* ===== COLOUR PICKER ===== */
-  (function() {
-    const picker = document.getElementById('colourPicker');
-    const swatchesWrap = document.getElementById('colourSwatches');
-    const addBtn = document.getElementById('addColourBtn');
-    const hexLabel = document.getElementById('colourHex');
-    const hiddenField = document.getElementById('brandColoursPicked');
-    const MAX_COLOURS = 3;
-    let colours = [];
-
-    function renderSwatches() {
-      swatchesWrap.querySelectorAll('.colour-swatch').forEach(el => el.remove());
-
-      colours.forEach((hex, index) => {
-        const swatch = document.createElement('div');
-        swatch.className = 'colour-swatch filled';
-
-        const fill = document.createElement('div');
-        fill.className = 'colour-fill';
-        fill.style.background = hex;
-
-        const input = document.createElement('input');
-        input.type = 'color';
-        input.value = hex;
-        input.addEventListener('input', (e) => {
-          colours[index] = e.target.value;
-          fill.style.background = e.target.value;
-          updateHex();
-        });
-
-        const remove = document.createElement('button');
-        remove.type = 'button';
-        remove.className = 'colour-remove';
-        remove.textContent = '×';
-        remove.addEventListener('click', (e) => {
-          e.stopPropagation();
-          colours.splice(index, 1);
-          renderSwatches();
-        });
-
-        swatch.appendChild(fill);
-        swatch.appendChild(input);
-        swatch.appendChild(remove);
-        swatchesWrap.insertBefore(swatch, addBtn);
-      });
-
-      addBtn.classList.toggle('hidden', colours.length >= MAX_COLOURS);
-      updateHex();
-    }
-
-    function updateHex() {
-      const txt = colours.length === 0
-        ? 'No colours added yet'
-        : colours.join('  ·  ');
-      hexLabel.textContent = txt;
-      if (hiddenField) hiddenField.value = colours.join(', ');
-    }
-
-    addBtn.addEventListener('click', () => {
-      if (colours.length >= MAX_COLOURS) return;
-      colours.push('#00b050');
-      renderSwatches();
-    });
-
-    const brandColourSelect = document.querySelector('[data-name="brand_colours"]');
-    if (brandColourSelect) {
-      brandColourSelect.querySelectorAll('.custom-option').forEach(opt => {
-        opt.addEventListener('click', () => {
-          if (opt.dataset.showColours === 'true') {
-            picker.classList.add('show');
-          } else {
-            picker.classList.remove('show');
-            colours = [];
-            renderSwatches();
-            const textInput = document.getElementById('colourText');
-            if (textInput) textInput.value = '';
-          }
-        });
-      });
-    }
-  })();
 
   /* ============================================================ */
   /* ===== IMAGE POP-UP (LIGHTBOX) LOGIC ===== */
@@ -1014,7 +891,6 @@
       overlay.classList.remove('active');
       overlay.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
-      // Clear after transition so there's no flash on next open
       setTimeout(() => {
         popupImg.src = '';
         popupImg.alt = '';
@@ -1022,28 +898,24 @@
       }, 260);
     }
 
-    // Attach click handlers to every finish thumbnail
     document.querySelectorAll('.custom-option.has-image .option-image').forEach(img => {
       img.addEventListener('click', function(e) {
-        e.stopPropagation(); // prevent the option selection from firing
+        e.stopPropagation();
         const fullSrc = this.dataset.full || this.src;
         const title = this.dataset.title || this.alt;
         openPopup(fullSrc, this.alt, title);
       });
     });
 
-    // Close on overlay click (but not when clicking the image itself)
     overlay.addEventListener('click', function(e) {
       if (e.target === overlay) closePopup();
     });
 
-    // Close button
     closeBtn.addEventListener('click', function(e) {
       e.stopPropagation();
       closePopup();
     });
 
-    // Close on Escape key
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape' && overlay.classList.contains('active')) {
         closePopup();
@@ -1071,41 +943,46 @@
       if (response.ok) {
         alert('Thanks! We got your details. We\'ll WhatsApp or email you within 24 hours.');
         form.reset();
-        // Reset custom dropdown visuals
-        form.querySelectorAll('.custom-select-trigger .value').forEach(el => {
-          el.textContent = 'Select one';
+
+        stepValues = {
+          orientation: '',
+          frame_size: '',
+          quantity: '',
+          frame_finish: ''
+        };
+
+        form.querySelectorAll('.custom-select-trigger .value, .custom-select-trigger .placeholder').forEach(el => {
+          const sel = el.closest('.custom-select');
+          if (sel) {
+            const name = sel.dataset.name;
+            el.textContent = name === 'orientation' ? 'Select orientation'
+              : name === 'frame_size' ? 'Select size'
+              : name === 'quantity' ? 'Select quantity'
+              : 'Select finish';
+          } else {
+            el.textContent = 'Select';
+          }
           el.classList.remove('value');
           el.classList.add('placeholder');
         });
         form.querySelectorAll('.custom-option.selected').forEach(el => el.classList.remove('selected'));
-        form.querySelectorAll('.colour-picker').forEach(el => el.classList.remove('show'));
         form.querySelectorAll('.other-input').forEach(el => el.classList.remove('show'));
-        form.querySelectorAll('.conditional-issues').forEach(el => el.style.display = 'none');
         form.querySelectorAll('input[type="hidden"][name]').forEach(inp => {
           if (inp.name !== '_subject' && inp.name !== '_template') inp.value = '';
         });
-        // Reset colour picker state
-        document.getElementById('colourHex').textContent = 'No colours added yet';
-        document.getElementById('brandColoursPicked').value = '';
-        document.getElementById('colourSwatches').querySelectorAll('.colour-swatch').forEach(el => el.remove());
-        document.getElementById('addColourBtn').classList.remove('hidden');
-        document.getElementById('colourText').value = '';
-        // Reset the product name readonly field
         const prodName = form.querySelector('input[name="product_name"]');
         if (prodName) prodName.value = 'Traditional Frame';
-        // Reset orientation filter
-        selectedOrientation = null;
+
+        // Reset size options: hide all except custom
         const sizeSelect = document.querySelector('[data-name="frame_size"]');
         if (sizeSelect) {
-          const sizeOptions = sizeSelect.querySelectorAll('.custom-option');
-          sizeOptions.forEach(opt => {
-            if (opt.dataset.orientation === 'any') {
-              opt.style.display = '';
-            } else {
-              opt.style.display = 'none';
-            }
+          sizeSelect.querySelectorAll('.custom-option').forEach(opt => {
+            opt.style.display = (opt.dataset.orientation === 'any') ? '' : 'none';
           });
         }
+
+        updateStepLocks();
+
       } else {
         const data = await response.json();
         const msg = data.errors ? data.errors.map(err => err.message).join(', ') : 'Something went wrong.';
