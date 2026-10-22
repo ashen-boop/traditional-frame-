@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revenue Hub — Traditional Frame Lead Form</title>
+  <!-- Font Awesome for the back arrow icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ============================================================ */
+    /* 👇👇👇  IMAGE POP-UP SIZE CONTROLS — EDIT THESE VALUES  👇👇👇 */
+    /* ============================================================ */
+    :root {
+      --popup-image-max-width: 480px;   /* max width of the enlarged image */
+      --popup-image-max-height: 70vh;   /* max height (keeps it on screen) */
+      --popup-backdrop-color: rgba(0, 0, 0, 0.75); /* dark overlay behind the image */
+      --popup-border-radius: 16px;      /* rounded corners of the enlarged image */
+      --popup-padding: 16px;            /* padding around the image inside the modal */
+    }
+    /* ============================================================ */
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #ffffff;
+      color: #000000;
+      line-height: 1.5;
+      padding: 24px 16px 60px;
+    }
+
+    /* ===== FIXED BACK BUTTON — top-left corner ===== */
+    .back-btn {
+      position: fixed;
+      top: 1.5rem;
+      left: 1.5rem;
+      z-index: 1000;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #000000;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 60px;
+      padding: 0.7rem 1.8rem 0.7rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+      text-decoration: none;
+      font-family: inherit;
+    }
+    .back-btn i {
+      font-size: 1rem;
+      color: #ffffff;
+      transition: transform 0.15s ease;
+    }
+    .back-btn:hover {
+      background: #00b050;
+      box-shadow: 0 10px 22px rgba(0, 176, 80, 0.3);
+      transform: translateY(-1px);
+    }
+    .back-btn:hover i { transform: translateX(-3px); }
+    .back-btn:active { transform: scale(0.98); }
+
+    .form-wrap {
+      max-width: 560px;
+      margin: 0 auto;
+      padding-top: 3.5rem;
+    }
+
+    .form-header { margin-bottom: 40px; }
+    .form-header h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+    .form-header p { font-size: 14px; color: #555; }
+
+    .section {
+      margin-bottom: 36px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid #eaeaea;
+    }
+    .section:last-of-type { border-bottom: none; }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #000;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00b050;
+    }
+
+    .field { margin-bottom: 18px; }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #000;
+    }
+    .field label .req { color: #ff4d6d; margin-left: 2px; }
+    .field label .opt { color: #999; font-weight: 400; font-size: 12px; margin-left: 4px; }
+
+    .sub-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 6px;
+      margin-top: 12px;
+    }
+    .sub-label:first-of-type { margin-top: 0; }
+
+    .hint {
+      display: block;
+      font-size: 12px;
+      color: #888;
+      margin-top: -4px;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .row { display: grid; gap: 12px; }
+    .row-2 { grid-template-columns: 1fr 1fr; }
+    .row-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+    @media (max-width: 520px) {
+      .row-2, .row-3, .row-4 { grid-template-columns: 1fr; }
+    }
+
+    .custom-select { position: relative; user-select: none; }
+
+    .custom-select-trigger {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-family: inherit;
+      color: #000;
+      background: #fafafa;
+      border: 1.5px solid #e5e5e5;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .custom-select-trigger:hover { border-color: #d0d0d0; background: #ffffff; }
+    .custom-select.open .custom-select-trigger {
+      border-color: #00b050; background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(0, 176, 80, 0.1);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    .custom-select-trigger .placeholder { color: #999; }
+    .custom-select-trigger .value { color: #000; }
+    .custom-select-trigger .chevron {
+      width: 14px; height: 14px; flex-shrink: 0;
+      transition: transform 0.25s ease;
+    }
+    .custom-select.open .chevron { transform: rotate(180deg); }
+
+    .custom-options {
+      position: absolute;
+      top: 100%; left: 0; right: 0;
+      background: #ffffff;
+      border: 1.5px solid #00b050;
+      border-top: none;
+      border-bottom-left-radius: 14px;
+      border-bottom-right-radius: 14px;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.2s ease;
+      z-index: 100;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+      margin-top: -1.5px;
+    }
+    .custom-select.open .custom-options {
+      max-height: 320px; overflow-y: auto; opacity: 1;
+    }
+
+    .custom-option {
+      padding: 13px 18px;
+      font-size: 15px;
+      color: #000;
+      cursor: pointer;
+      transition: background 0.15s ease, padding-left 0.15s ease;
+      border-bottom: 1px solid #f5f5f5;
+      line-height: 1.4;
+    }
+    .custom-option:last-child { border-bottom: none; }
+    .custom-option:hover { background: #f0fdf6; padding-left: 22px; color: #00b050; }
+    .custom-option.selected { background: #e8faf0; color: #00b050; font-weight: 600; }
+    .custom-option .option-sub {
+      display: block; font-size: 12px; color: #888;
+      margin-top: 2px; font-weight: 400;
+    }
+    .custom-option:hover .option-sub,
+    .custom-option.selected .option-sub { color: #00b050; opacity: 0.8; }
+    .custom-options::-webkit-scrollbar { width: 6px; }
+    .custom-options::-webkit-scrollbar-track { background: transparent; }
+    .custom-options::-webkit-scrollbar-thumb { background: #d0d0d0; border-radius: 10px; }
+    .custom-options::-webkit-scrollbar-thumb:hover { background: #b0b0b0; }
+
+    /* ===== FRAME FINISH OPTION WITH IMAGE ===== */
+    .custom-option.has-image {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 18px;
+    }
+    .custom-option.has-image:hover {
+      padding-left: 18px;
+    }
+    .custom-option.has-image .option-image {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid #e5e5e5;
+      background: #f0f0f0;
+      cursor: zoom-in;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .custom-option.has-image .option-image:hover {
+      transform: scale(1.06);
+      border-color: #00b050;
+    }
+    .custom-option.has-image .option-text-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+    .custom-option.has-image .option-text-wrap .option-name {
+      display: block;
+      font-size: 15px;
+      font-weight: 500;
+      color: #000;
+      transition: color 0.15s;
+    }
+    .custom-option.has-image .option-text-wrap .option-sub {
+      display: block;
+      font-size: 12px;
+      color: #888;
+      margin-top: 2px;
+      font-weight: 400;
+    }
+    .custom-option.has-image:hover .option-name,
+    .custom-option.has-image.selected .option-name {
+      color: #00b050;
+      font-weight: 600;
+    }
+    .custom-option.has-image:hover .option-sub,
+    .custom-option.has-image.selected .option-sub {
+      color: #00b050;
+      opacity: 0.8;
+    }
+
+    .other-input { margin-top: 10px; display: none; }
+    .other-input.show { display: block; animation: slideDown 0.25s ease; }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .other-input input {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-family: inherit;
+      color: #000;
+      background: #fff;
+      border: 1.5px solid #ff4d6d;
+      border-radius: 14px;
+      outline: none;
+      transition: box-shadow 0.2s;
+    }
+    .other-input input:focus { box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.1); }
+
+    input[type="text"], input[type="email"], input[type="tel"] {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-family: inherit;
+      color: #000;
+      background: #fafafa;
+      border: 1.5px solid #e5e5e5;
+      border-radius: 14px;
+      outline: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    input[type="text"]:hover, input[type="email"]:hover, input[type="tel"]:hover {
+      border-color: #d0d0d0; background: #ffffff;
+    }
+    input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus {
+      border-color: #00b050; background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(0, 176, 80, 0.1);
+    }
+
+    .colour-picker {
+      display: none;
+      margin-top: 12px;
+      padding: 14px;
+      background: #fafafa;
+      border: 1.5px dashed #e0e0e0;
+      border-radius: 14px;
+    }
+    .colour-picker.show { display: block; animation: slideDown 0.25s ease; }
+    .colour-picker-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+      text-transform: uppercase; color: #888;
+      margin-bottom: 10px; display: block;
+    }
+    .colour-swatches { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .colour-swatch {
+      width: 44px; height: 44px; border-radius: 12px;
+      border: 2px solid #e5e5e5;
+      cursor: pointer; position: relative;
+      overflow: visible;
+      transition: transform 0.15s, border-color 0.2s;
+      background: #ffffff;
+    }
+    .colour-swatch:hover { transform: scale(1.05); border-color: #00b050; }
+    .colour-swatch input[type="color"] {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      border: none; padding: 0; cursor: pointer;
+      opacity: 0; border-radius: 10px;
+    }
+    .colour-swatch .colour-fill {
+      position: absolute; inset: 0; border-radius: 10px;
+      background: #ffffff; pointer-events: none;
+    }
+    .colour-swatch .colour-remove {
+      position: absolute; top: -6px; right: -6px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #ff4d6d; color: #fff;
+      border: 2px solid #fff; font-size: 11px; line-height: 1;
+      display: none; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 2; padding: 0;
+    }
+    .colour-swatch.filled .colour-remove { display: flex; }
+    .add-colour-btn {
+      width: 44px; height: 44px; border-radius: 12px;
+      border: 2px dashed #d0d0d0; background: #ffffff;
+      color: #888; font-size: 20px; font-weight: 300;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .add-colour-btn:hover { border-color: #00b050; color: #00b050; background: #f0fdf6; }
+    .add-colour-btn.hidden { display: none; }
+    .colour-hex { font-size: 12px; color: #888; margin-top: 8px; }
+    .colour-text-input { margin-top: 12px; }
+    .colour-text-input label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+      text-transform: uppercase; color: #888;
+      margin-bottom: 6px; display: block;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 18px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      color: #000;
+      background: #00b050;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+      margin-top: 8px;
+      box-shadow: 0 4px 14px rgba(0, 176, 80, 0.2);
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(0, 176, 80, 0.3);
+      background: #00c258;
+    }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+    .privacy {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      margin-top: 16px;
+    }
+
+    /* ============================================================ */
+    /* ===== IMAGE POP-UP (LIGHTBOX) ===== */
+    /* ============================================================ */
+    .image-popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--popup-backdrop-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--popup-padding);
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      cursor: zoom-out;
+    }
+    .image-popup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .image-popup-content {
+      position: relative;
+      max-width: var(--popup-image-max-width);
+      max-height: var(--popup-image-max-height);
+      width: auto;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: scale(0.92);
+      transition: transform 0.25s ease;
+      cursor: default;
+    }
+    .image-popup-overlay.active .image-popup-content {
+      transform: scale(1);
+    }
+    .image-popup-content img {
+      display: block;
+      max-width: 100%;
+      max-height: var(--popup-image-max-height);
+      width: auto;
+      height: auto;
+      border-radius: var(--popup-border-radius);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+      background: #fff;
+    }
+    .image-popup-caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -36px;
+      text-align: center;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+      pointer-events: none;
+    }
+    .image-popup-close {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      font-size: 20px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      transition: background 0.15s ease, transform 0.15s ease;
+      z-index: 2;
+      padding: 0;
+    }
+    .image-popup-close:hover {
+      background: #00b050;
+      color: #ffffff;
+      transform: scale(1.08);
+    }
+
+    @media (max-width: 520px) {
+      .back-btn {
+        top: 1rem; left: 1rem;
+        font-size: 0.85rem;
+        padding: 0.55rem 1.3rem 0.55rem 1.1rem;
+      }
+      .form-wrap { padding-top: 3.2rem; }
+      :root {
+        --popup-image-max-width: 92vw;   /* bigger relative to screen on mobile */
+        --popup-image-max-height: 60vh;
+        --popup-padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="https://www.theartisticunity.art/#revenue-hub" class="back-btn" id="backButton">
+    <i class="fas fa-arrow-left"></i> Back
+  </a>
+
+<div class="form-wrap">
+
+  <div class="form-header">
+    <h1>Traditional Frame</h1>
+    <p>Tell us about your frame needs. We'll get back to you with the perfect solution.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 👇👇👇  REPLACE "YOUR_FORM_ID" WITH YOUR FORMSPREE ID  👇👇👇 -->
+  <!-- ============================================================ -->
+  <form id="revenueForm"
+        action="https://formspree.io/f/xjygjzbd"
+        method="POST">
+
+    <input type="hidden" name="_subject" value="New Traditional Frame Lead — The Artistic Unity">
+    <input type="hidden" name="_template" value="table">
+
+    <!-- PRODUCT INFO -->
+    <div class="section">
+      <div class="section-title">Product Details</div>
+
+      <!-- Product Name (default) -->
+      <div class="field">
+        <label>Product name</label>
+        <input type="text" name="product_name" value="Traditional Frame" readonly
+               style="background:#f0f0f0; color:#555; cursor:not-allowed;" />
+      </div>
+
+      <!-- Q1 — ORIENTATION: Portrait / Landscape / Square -->
+      <div class="field">
+        <label>1. Orientation <span class="req">*</span></label>
+        <span class="hint">Choose the orientation that best fits your artwork or photo.</span>
+        <div class="custom-select" data-name="orientation">
+          <div class="custom-select-trigger">
+            <span class="placeholder">Select orientation</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="custom-options">
+            <div class="custom-option">Portrait (tall)</div>
+            <div class="custom-option">Landscape (wide)</div>
+            <div class="custom-option">Square</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2 — SIZE SELECTION (varies by orientation) -->
+      <div class="field">
+        <label>2. Select size <span class="req">*</span></label>
+        <span class="hint">Choose the frame size that fits your artwork or photo.</span>
+        <div class="custom-select" data-name="frame_size">
+          <div class="custom-select-trigger">
+            <span class="placeholder">Select size</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="custom-options">
+            <!-- Portrait options -->
+            <div class="custom-option" data-orientation="portrait">
+              Small Portrait — 4:5 ratio (approx. 8" × 10")
+            </div>
+            <div class="custom-option" data-orientation="portrait">
+              Medium Portrait — 3:4 ratio (approx. 12" × 16")
+            </div>
+            <div class="custom-option" data-orientation="portrait">
+              Large Portrait — 2:3 ratio (approx. 16" × 24")
+            </div>
+            <!-- Landscape options -->
+            <div class="custom-option" data-orientation="landscape">
+              Small Landscape — 5:4 ratio (approx. 10" × 8")
+            </div>
+            <div class="custom-option" data-orientation="landscape">
+              Medium Landscape — 4:3 ratio (approx. 16" × 12")
+            </div>
+            <div class="custom-option" data-orientation="landscape">
+              Large Landscape — 3:2 ratio (approx. 24" × 16")
+            </div>
+            <!-- Square options: 3 separate sizes -->
+            <div class="custom-option" data-orientation="square">
+              Square Small — 1:1 ratio (approx. 6" × 6")
+            </div>
+            <div class="custom-option" data-orientation="square">
+              Square Medium — 1:1 ratio (approx. 10" × 10")
+            </div>
+            <div class="custom-option" data-orientation="square">
+              Square Large — 1:1 ratio (approx. 14" × 14")
+            </div>
+            <!-- Custom size always available -->
+            <div class="custom-option" data-other="true" data-orientation="any">
+              Custom size (specify)
+            </div>
+          </div>
+        </div>
+        <div class="other-input"><input type="text" placeholder="e.g. 9 × 13 inches, or custom dimensions"></div>
+      </div>
+
+      <!-- Q3 — QUANTITY -->
+      <div class="field">
+        <label>3. Quantity <span class="req">*</span></label>
+        <div class="custom-select" data-name="quantity">
+          <div class="custom-select-trigger">
+            <span class="placeholder">Select quantity</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="custom-options">
+            <div class="custom-option">1 frame</div>
+            <div class="custom-option">2 – 5 frames</div>
+            <div class="custom-option">6 – 10 frames</div>
+            <div class="custom-option">11+ frames (bulk)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4 — FRAME FINISH (with clickable images) -->
+      <div class="field">
+        <label>4. Preferred frame finish <span class="opt">(optional)</span></label>
+        <div class="custom-select" data-name="frame_finish">
+          <div class="custom-select-trigger">
+            <span class="placeholder">Select finish</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="custom-options">
+            <div class="custom-option has-image">
+              <img class="option-image"
+                   src="https://images.unsplash.com/photo-1615529182904-14819c35db37?w=400&h=400&fit=crop"
+                   alt="Natural wood frame"
+                   data-title="Natural wood"
+                   data-full="https://images.unsplash.com/photo-1615529182904-14819c35db37?w=1200&h=1200&fit=crop"
+                   loading="lazy" />
+              <div class="option-text-wrap">
+                <span class="option-name">Natural wood</span>
+                <span class="option-sub">Warm, organic grain finish</span>
+              </div>
+            </div>
+            <div class="custom-option has-image">
+              <img class="option-image"
+                   src="https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&h=400&fit=crop"
+                   alt="Black matte frame"
+                   data-title="Black matte"
+                   data-full="https://images.unsplash.com/photo-1618220179428-22790b461013?w=1200&h=1200&fit=crop"
+                   loading="lazy" />
+              <div class="option-text-wrap">
+                <span class="option-name">Black matte</span>
+                <span class="option-sub">Sleek, modern, non-reflective</span>
+              </div>
+            </div>
+            <div class="custom-option has-image">
+              <img class="option-image"
+                   src="https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=400&h=400&fit=crop"
+                   alt="Gold metallic frame"
+                   data-title="Gold / metallic"
+                   data-full="https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200&h=1200&fit=crop"
+                   loading="lazy" />
+              <div class="option-text-wrap">
+                <span class="option-name">Gold / metallic</span>
+                <span class="option-sub">Elegant, luxurious shine</span>
+              </div>
+            </div>
+            <div class="custom-option has-image">
+              <img class="option-image"
+                   src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&h=400&fit=crop"
+                   alt="White frame"
+                   data-title="White"
+                   data-full="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&h=1200&fit=crop"
+                   loading="lazy" />
+              <div class="option-text-wrap">
+                <span class="option-name">White</span>
+                <span class="option-sub">Clean, minimalist look</span>
+              </div>
+            </div>
+            <div class="custom-option has-image">
+              <img class="option-image"
+                   src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=400&h=400&fit=crop"
+                   alt="Vintage distressed frame"
+                   data-title="Vintage / distressed"
+                   data-full="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200&h=1200&fit=crop"
+                   loading="lazy" />
+              <div class="option-text-wrap">
+                <span class="option-name">Vintage / distressed</span>
+                <span class="option-sub">Weathered, antique charm</span>
+              </div>
+            </div>
+            <div class="custom-option" data-other="true">
+              Other (please specify)
+            </div>
+          </div>
+        </div>
+        <div class="other-input"><input type="text" placeholder="Please specify"></div>
+      </div>
+
+      <!-- Q5 — BRAND COLOURS (optional) -->
+      <div class="field">
+        <label>5. Do you have brand colours for the frame? <span class="opt">(optional)</span></label>
+        <div class="custom-select" data-name="brand_colours" data-colour-picker="true">
+          <div class="custom-select-trigger">
+            <span class="placeholder">Select</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="custom-options">
+            <div class="custom-option" data-show-colours="true">Yes, I have specific colours</div>
+            <div class="custom-option">No, you decide for me</div>
+            <div class="custom-option">I have colours but want suggestions</div>
+          </div>
+        </div>
+
+        <div class="colour-picker" id="colourPicker">
+          <span class="colour-picker-label">Pick your brand colours</span>
+          <div class="colour-swatches" id="colourSwatches">
+            <button type="button" class="add-colour-btn" id="addColourBtn">+</button>
+          </div>
+          <div class="colour-hex" id="colourHex">No colours added yet</div>
+
+          <div class="colour-text-input">
+            <label>Or write your colours in words <span class="opt">(optional)</span></label>
+            <input type="text" id="colourText" name="brand_colours_text" placeholder="e.g. Navy blue, gold, and white">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT DETAILS -->
+    <div class="section">
+      <div class="section-title">Your Contact Details</div>
+
+      <div class="field">
+        <label>Full name <span class="req">*</span></label>
+        <input type="text" name="name" required placeholder="Your full name">
+      </div>
+
+      <div class="field">
+        <label>Address <span class="req">*</span></label>
+        <input type="text" name="address" required placeholder="Street, city, postal code">
+      </div>
+
+      <div class="field">
+        <label>Contact number <span class="req">*</span></label>
+        <input type="tel" name="contact_number" required placeholder="+94 70 000 0000">
+      </div>
+
+      <div class="field">
+        <label>Email address <span class="opt">(optional)</span></label>
+        <input type="email" name="email" placeholder="you@example.com">
+      </div>
+    </div>
+
+    <input type="hidden" name="brand_colours_picked" id="brandColoursPicked" value="">
+
+    <button type="submit" class="submit-btn">Get My Frame Quote →</button>
+    <p class="privacy">We respect your privacy. We'll WhatsApp or email you within 24 hours.</p>
+
+  </form>
+</div>
+
+<!-- ============================================================ -->
+<!-- ===== IMAGE POP-UP (LIGHTBOX) MARKUP ===== -->
+<!-- ============================================================ -->
+<div class="image-popup-overlay" id="imagePopupOverlay" aria-hidden="true" role="dialog" aria-label="Enlarged frame finish image">
+  <div class="image-popup-content" id="imagePopupContent">
+    <button type="button" class="image-popup-close" id="imagePopupClose" aria-label="Close image">&times;</button>
+    <img id="imagePopupImg" src="" alt="" />
+    <div class="image-popup-caption" id="imagePopupCaption"></div>
+  </div>
+</div>
+
+<script>
+  /* ===== CUSTOM DROPDOWNS + HIDDEN INPUT SYNC ===== */
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.custom-select')) {
+      document.querySelectorAll('.custom-select.open').forEach(el => el.classList.remove('open'));
+    }
+  });
+
+  /* --- Track selected orientation to filter size options --- */
+  let selectedOrientation = null;
+
+  document.querySelectorAll('.custom-select').forEach(select => {
+    const trigger = select.querySelector('.custom-select-trigger');
+    const placeholder = trigger.querySelector('.placeholder');
+    const options = select.querySelectorAll('.custom-option');
+
+    const hidden = document.createElement('input');
+    hidden.type = 'hidden';
+    hidden.name = select.dataset.name || 'dropdown';
+    select.appendChild(hidden);
+
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = select.classList.contains('open');
+      document.querySelectorAll('.custom-select.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) select.classList.add('open');
+    });
+
+    options.forEach(option => {
+      option.addEventListener('click', function(e) {
+        e.stopPropagation();
+        // Determine display value: for image options, use the .option-name text
+        const nameEl = option.querySelector('.option-name');
+        const value = nameEl ? nameEl.textContent.trim() : option.textContent.trim();
+
+        placeholder.textContent = value;
+        placeholder.classList.remove('placeholder');
+        placeholder.classList.add('value');
+
+        options.forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+
+        select.classList.remove('open');
+
+        hidden.value = value;
+
+        /* --- If this is the orientation dropdown, filter size options --- */
+        if (select.dataset.name === 'orientation') {
+          const optText = value.toLowerCase();
+          if (optText.includes('portrait')) {
+            selectedOrientation = 'portrait';
+          } else if (optText.includes('landscape')) {
+            selectedOrientation = 'landscape';
+          } else if (optText.includes('square')) {
+            selectedOrientation = 'square';
+          } else {
+            selectedOrientation = null;
+          }
+
+          const sizeSelect = document.querySelector('[data-name="frame_size"]');
+          if (sizeSelect) {
+            const sizeOptions = sizeSelect.querySelectorAll('.custom-option');
+            sizeOptions.forEach(opt => {
+              const optOrientation = opt.dataset.orientation;
+              if (optOrientation === selectedOrientation || optOrientation === 'any') {
+                opt.style.display = '';
+              } else {
+                opt.style.display = 'none';
+              }
+            });
+
+            // Reset size selection if currently selected size is now hidden
+            const currentSelectedSize = sizeSelect.querySelector('.custom-option.selected');
+            if (currentSelectedSize && currentSelectedSize.style.display === 'none') {
+              currentSelectedSize.classList.remove('selected');
+              const sizePlaceholder = sizeSelect.querySelector('.custom-select-trigger .value');
+              if (sizePlaceholder) {
+                sizePlaceholder.textContent = 'Select size';
+                sizePlaceholder.classList.remove('value');
+                sizePlaceholder.classList.add('placeholder');
+              }
+              const sizeHidden = sizeSelect.querySelector('input[type="hidden"]');
+              if (sizeHidden) sizeHidden.value = '';
+            }
+          }
+        }
+
+        // Handle "Other" input
+        const directOther = select.parentElement.querySelector('.other-input');
+        if (directOther) {
+          if (option.dataset.other === 'true') {
+            directOther.classList.add('show');
+            directOther.querySelector('input').focus();
+          } else {
+            directOther.classList.remove('show');
+            directOther.querySelector('input').value = '';
+          }
+        }
+
+        // Handle conditional issues (none here, but kept for safety)
+        if (select.dataset.conditional === 'true') {
+          const issuesBlock = select.closest('.field').querySelector('.conditional-issues');
+          if (issuesBlock) {
+            issuesBlock.style.display = option.dataset.showIssues === 'true' ? 'block' : 'none';
+          }
+        }
+      });
+    });
+  });
+
+  /* --- Initialise size options: hide all except "custom size" until orientation is chosen --- */
+  (function initSizeFilter() {
+    const sizeSelect = document.querySelector('[data-name="frame_size"]');
+    if (sizeSelect) {
+      const sizeOptions = sizeSelect.querySelectorAll('.custom-option');
+      sizeOptions.forEach(opt => {
+        if (opt.dataset.orientation === 'any') {
+          opt.style.display = '';
+        } else {
+          opt.style.display = 'none';
+        }
+      });
+    }
+  })();
+
+  /* ===== NAME THE "OTHER" INPUTS ===== */
+  document.querySelectorAll('.other-input input').forEach((input, i) => {
+    if (!input.name) {
+      const parentSelect = input.closest('.field')?.querySelector('.custom-select');
+      const base = parentSelect?.dataset.name || `other_${i}`;
+      input.name = base + '_other';
+    }
+  });
+
+  /* ===== COLOUR PICKER ===== */
+  (function() {
+    const picker = document.getElementById('colourPicker');
+    const swatchesWrap = document.getElementById('colourSwatches');
+    const addBtn = document.getElementById('addColourBtn');
+    const hexLabel = document.getElementById('colourHex');
+    const hiddenField = document.getElementById('brandColoursPicked');
+    const MAX_COLOURS = 3;
+    let colours = [];
+
+    function renderSwatches() {
+      swatchesWrap.querySelectorAll('.colour-swatch').forEach(el => el.remove());
+
+      colours.forEach((hex, index) => {
+        const swatch = document.createElement('div');
+        swatch.className = 'colour-swatch filled';
+
+        const fill = document.createElement('div');
+        fill.className = 'colour-fill';
+        fill.style.background = hex;
+
+        const input = document.createElement('input');
+        input.type = 'color';
+        input.value = hex;
+        input.addEventListener('input', (e) => {
+          colours[index] = e.target.value;
+          fill.style.background = e.target.value;
+          updateHex();
+        });
+
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'colour-remove';
+        remove.textContent = '×';
+        remove.addEventListener('click', (e) => {
+          e.stopPropagation();
+          colours.splice(index, 1);
+          renderSwatches();
+        });
+
+        swatch.appendChild(fill);
+        swatch.appendChild(input);
+        swatch.appendChild(remove);
+        swatchesWrap.insertBefore(swatch, addBtn);
+      });
+
+      addBtn.classList.toggle('hidden', colours.length >= MAX_COLOURS);
+      updateHex();
+    }
+
+    function updateHex() {
+      const txt = colours.length === 0
+        ? 'No colours added yet'
+        : colours.join('  ·  ');
+      hexLabel.textContent = txt;
+      if (hiddenField) hiddenField.value = colours.join(', ');
+    }
+
+    addBtn.addEventListener('click', () => {
+      if (colours.length >= MAX_COLOURS) return;
+      colours.push('#00b050');
+      renderSwatches();
+    });
+
+    const brandColourSelect = document.querySelector('[data-name="brand_colours"]');
+    if (brandColourSelect) {
+      brandColourSelect.querySelectorAll('.custom-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          if (opt.dataset.showColours === 'true') {
+            picker.classList.add('show');
+          } else {
+            picker.classList.remove('show');
+            colours = [];
+            renderSwatches();
+            const textInput = document.getElementById('colourText');
+            if (textInput) textInput.value = '';
+          }
+        });
+      });
+    }
+  })();
+
+  /* ============================================================ */
+  /* ===== IMAGE POP-UP (LIGHTBOX) LOGIC ===== */
+  /* ============================================================ */
+  (function() {
+    const overlay = document.getElementById('imagePopupOverlay');
+    const popupImg = document.getElementById('imagePopupImg');
+    const popupCaption = document.getElementById('imagePopupCaption');
+    const closeBtn = document.getElementById('imagePopupClose');
+
+    function openPopup(src, alt, title) {
+      popupImg.src = src;
+      popupImg.alt = alt || '';
+      popupCaption.textContent = title || alt || '';
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePopup() {
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      // Clear after transition so there's no flash on next open
+      setTimeout(() => {
+        popupImg.src = '';
+        popupImg.alt = '';
+        popupCaption.textContent = '';
+      }, 260);
+    }
+
+    // Attach click handlers to every finish thumbnail
+    document.querySelectorAll('.custom-option.has-image .option-image').forEach(img => {
+      img.addEventListener('click', function(e) {
+        e.stopPropagation(); // prevent the option selection from firing
+        const fullSrc = this.dataset.full || this.src;
+        const title = this.dataset.title || this.alt;
+        openPopup(fullSrc, this.alt, title);
+      });
+    });
+
+    // Close on overlay click (but not when clicking the image itself)
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closePopup();
+    });
+
+    // Close button
+    closeBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      closePopup();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && overlay.classList.contains('active')) {
+        closePopup();
+      }
+    });
+  })();
+
+  /* ===== FORMSPREE AJAX SUBMIT ===== */
+  document.getElementById('revenueForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = this;
+    const btn = form.querySelector('.submit-btn');
+    const originalText = btn.textContent;
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        alert('Thanks! We got your details. We\'ll WhatsApp or email you within 24 hours.');
+        form.reset();
+        // Reset custom dropdown visuals
+        form.querySelectorAll('.custom-select-trigger .value').forEach(el => {
+          el.textContent = 'Select one';
+          el.classList.remove('value');
+          el.classList.add('placeholder');
+        });
+        form.querySelectorAll('.custom-option.selected').forEach(el => el.classList.remove('selected'));
+        form.querySelectorAll('.colour-picker').forEach(el => el.classList.remove('show'));
+        form.querySelectorAll('.other-input').forEach(el => el.classList.remove('show'));
+        form.querySelectorAll('.conditional-issues').forEach(el => el.style.display = 'none');
+        form.querySelectorAll('input[type="hidden"][name]').forEach(inp => {
+          if (inp.name !== '_subject' && inp.name !== '_template') inp.value = '';
+        });
+        // Reset colour picker state
+        document.getElementById('colourHex').textContent = 'No colours added yet';
+        document.getElementById('brandColoursPicked').value = '';
+        document.getElementById('colourSwatches').querySelectorAll('.colour-swatch').forEach(el => el.remove());
+        document.getElementById('addColourBtn').classList.remove('hidden');
+        document.getElementById('colourText').value = '';
+        // Reset the product name readonly field
+        const prodName = form.querySelector('input[name="product_name"]');
+        if (prodName) prodName.value = 'Traditional Frame';
+        // Reset orientation filter
+        selectedOrientation = null;
+        const sizeSelect = document.querySelector('[data-name="frame_size"]');
+        if (sizeSelect) {
+          const sizeOptions = sizeSelect.querySelectorAll('.custom-option');
+          sizeOptions.forEach(opt => {
+            if (opt.dataset.orientation === 'any') {
+              opt.style.display = '';
+            } else {
+              opt.style.display = 'none';
+            }
+          });
+        }
+      } else {
+        const data = await response.json();
+        const msg = data.errors ? data.errors.map(err => err.message).join(', ') : 'Something went wrong.';
+        alert('Oops! ' + msg);
+      }
+    } catch (err) {
+      alert('Network error. Please check your connection and try again.');
+    } finally {
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
