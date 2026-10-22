@@ -426,6 +426,49 @@
     }
 
     /* ============================================================ */
+    /* ===== WHATSAPP IMAGE MESSAGE ===== */
+    /* ============================================================ */
+    .whatsapp-image-message {
+      margin-top: 8px;
+      margin-bottom: 8px;
+      padding: 16px 18px;
+      background: #f0fdf6;
+      border: 1.5px dashed #00b050;
+      border-radius: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .whatsapp-image-message .wa-icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #00b050;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .whatsapp-image-message .wa-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .whatsapp-image-message .wa-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #000000;
+      margin-bottom: 4px;
+    }
+    .whatsapp-image-message .wa-text p {
+      font-size: 13px;
+      color: #555555;
+      line-height: 1.5;
+    }
+
+    /* ============================================================ */
     /* ===== IMAGE POP-UP (LIGHTBOX) ===== */
     /* ============================================================ */
     .image-popup-overlay {
@@ -587,12 +630,7 @@
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="custom-options">
-            <!-- ============================================================ -->
-            <!-- 9 SIZE OPTIONS — EACH HAS ITS OWN INDEPENDENT IMAGE URL       -->
-            <!-- Just replace the data-size-image value to change that size's -->
-            <!-- image. Each one can be a completely different URL.           -->
-            <!-- ============================================================ -->
-
+            <!-- 9 SIZE OPTIONS — each with its own independent image URL -->
             <div class="custom-option"
                  data-size-image="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&h=500&fit=crop&sig=1"
                  data-size-label="Small Portrait · 8&quot; × 10&quot; (4:5)">
@@ -775,6 +813,19 @@
       <div class="field">
         <label>Email address <span class="opt">(optional)</span></label>
         <input type="email" name="email" placeholder="you@example.com">
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== WHATSAPP IMAGE MESSAGE (after email, before submit) ===== -->
+    <!-- ============================================================ -->
+    <div class="whatsapp-image-message">
+      <div class="wa-icon">
+        <i class="fab fa-whatsapp"></i>
+      </div>
+      <div class="wa-text">
+        <strong>Please send your images to the WhatsApp account that you are sending this form to.</strong>
+        <p>After submitting this form, please share your reference images directly on WhatsApp so we can process your quote faster.</p>
       </div>
     </div>
 
@@ -1057,7 +1108,7 @@
       });
 
       if (response.ok) {
-        alert('Thanks! We got your details. We\'ll WhatsApp or email you within 24 hours.');
+        alert('Thanks! We got your details. We\'ll WhatsApp or email you within 24 hours.\n\nDon\'t forget: please send your reference images to the WhatsApp account that you are sending this form to.');
         form.reset();
 
         stepValues = {
