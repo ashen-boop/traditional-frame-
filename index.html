@@ -109,10 +109,10 @@
     }
 
     /* ============================================================ */
-    /* ===== GALLERY FIELD — distinct + 30px extra space ===== */
+    /* ===== GALLERY FIELD ===== */
     /* ============================================================ */
     .gallery-field {
-      margin-bottom: 58px; /* 28px original + 30px extra */
+      margin-bottom: 58px;
       padding: 16px;
       background: #ffffff;
       border: 1.5px solid #e5e5e5;
@@ -623,6 +623,22 @@
       line-height: 1.5;
     }
 
+    /* ============================================================ */
+    /* ===== MOBILE & TABLET GALLERY REDUCTION (up to 768px) ===== */
+    /* ============================================================ */
+    @media (max-width: 768px) {
+      .gallery-preview-wrap {
+        width: calc(100% - 60px);
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .gallery-thumbs {
+        width: calc(100% - 60px);
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
     @media (max-width: 520px) {
       .back-btn {
         top: 1rem; left: 1rem;
@@ -630,62 +646,70 @@
         padding: 0.55rem 1.3rem 0.55rem 1.1rem;
       }
       .form-wrap { padding-top: 3.2rem; }
+      .size-categories-row {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 6px;
+      }
     }
-
-
 
 
 /* ===== DESKTOP-ONLY FONT SIZE BOOST ===== */
 @media (min-width: 769px) {
   body {
-    font-size: 22px;                    /* base bump */
+    font-size: 22px;
   }
   .form-header h1 {
-    font-size: 35px;                    /* main heading */
+    font-size: 35px;
   }
   .form-header p {
-    font-size: 21px;                    /* subtitle */
+    font-size: 21px;
   }
   .section-title {
-    font-size: 19px;                    /* section headers */
+    font-size: 19px;
   }
   .field label {
-    font-size: 21px;                    /* field labels */
+    font-size: 21px;
   }
   .hint {
-    font-size: 14px;                    /* helper text */
+    font-size: 14px;
   }
   input[type="text"],
   input[type="email"],
   input[type="tel"],
   textarea {
-    font-size: 20px;                    /* input text */
+    font-size: 20px;
     padding: 15px 18px;
   }
   .custom-select-trigger {
-    font-size: 16px;                    /* dropdown trigger */
+    font-size: 16px;
     padding: 12px 14px;
     min-height: 46px;
   }
   .custom-option {
-    font-size: 15px;                    /* dropdown options */
+    font-size: 15px;
     padding: 12px 14px;
   }
   .size-category-title {
-    font-size: 12px;                    /* Small/Medium/Large titles */
+    font-size: 12px;
   }
 
   .size-preview-wrap {
-  width: calc(100% - 90px);
-  margin-left: auto;
-  margin-right: auto;
-}
+    width: calc(100% - 90px);
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-.gallery-preview-wrap {
-  width: calc(100% - 90px);
-  margin-left: auto;
-  margin-right: auto;
-}
+  .gallery-preview-wrap {
+    width: calc(100% - 90px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .gallery-thumbs {
+    width: calc(100% - 90px);
+    margin-left: auto;
+    margin-right: auto;
+  }
 
   .size-preview-placeholder {
     font-size: 14px;
@@ -761,7 +785,7 @@
                style="background:#f0f0f0; color:#555; cursor:not-allowed;" />
       </div>
 
-      <!-- 2) PRODUCT GALLERY — 58px bottom margin -->
+      <!-- 2) PRODUCT GALLERY -->
       <div class="field gallery-field">
         <label>Product preview <span class="opt">(optional)</span></label>
         <span class="hint">Tap a thumbnail to preview it. This is just for reference.</span>
@@ -936,9 +960,7 @@
       </div>
     </div>
 
-    <!-- ============================================================ -->
-    <!-- CONTACT SECTION — locked until all selections are made      -->
-    <!-- ============================================================ -->
+    <!-- CONTACT SECTION -->
     <div class="section contact-section locked" id="contactSection">
       <div class="section-title">Your Contact Details</div>
 
@@ -968,9 +990,7 @@
       </div>
     </div>
 
-    <!-- ============================================================ -->
-    <!-- FURTHER INFORMATION — always unlocked, optional             -->
-    <!-- ============================================================ -->
+    <!-- FURTHER INFORMATION -->
     <div class="section">
       <div class="section-title">Further Information</div>
 
@@ -999,22 +1019,82 @@
 
 <script>
   /* ============================================================ */
-  /* ===== PRODUCT GALLERY ===== */
+  /* ===== INSTANT PREVIEW PRELOAD (gallery + size preview) ===== */
   /* ============================================================ */
   (function() {
+    /* ---------- Helper: preload + decode a URL ---------- */
+    function preloadAndDecode(url) {
+      if (!url) return null;
+      const img = new Image();
+      img.src = url;
+      if (img.decode) {
+        img.decode().catch(() => {});
+      }
+      return img;
+    }
+
+    /* ---------- Helper: swap src with a decoded image ---------- */
+    function swapInstant(targetImg, url, cache) {
+      if (!url || !targetImg) return;
+      const cached = cache[url];
+      if (cached && cached.complete && cached.naturalWidth > 0) {
+        targetImg.src = url;
+      } else {
+        const img = new Image();
+        img.src = url;
+        const apply = () => { targetImg.src = url; };
+        if (img.decode) {
+          img.decode().then(apply).catch(apply);
+        } else {
+          img.onload = apply;
+          if (img.complete) apply();
+        }
+        cache[url] = img;
+      }
+    }
+
+    /* ============================================================ */
+    /* ===== 1) PRODUCT GALLERY ===== */
+    /* ============================================================ */
     const galleryPreviewImg = document.getElementById('galleryPreviewImg');
     const galleryThumbs = document.getElementById('galleryThumbs');
 
     if (galleryPreviewImg && galleryThumbs) {
-      galleryThumbs.querySelectorAll('.gallery-thumb').forEach(thumb => {
+      const thumbs = Array.from(galleryThumbs.querySelectorAll('.gallery-thumb'));
+
+      const galleryCache = {};
+      thumbs.forEach(t => {
+        const url = t.dataset.full;
+        if (url) galleryCache[url] = preloadAndDecode(url);
+      });
+
+      thumbs.forEach(thumb => {
         thumb.addEventListener('click', function() {
           const fullSrc = this.dataset.full;
           if (!fullSrc) return;
-          galleryPreviewImg.src = fullSrc;
-          galleryThumbs.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+          swapInstant(galleryPreviewImg, fullSrc, galleryCache);
+          thumbs.forEach(t => t.classList.remove('active'));
           this.classList.add('active');
         });
       });
+    }
+
+    /* ============================================================ */
+    /* ===== 2) SIZE PREVIEW ===== */
+    /* ============================================================ */
+    const sizePreviewImg = document.getElementById('sizePreviewImg');
+
+    if (sizePreviewImg) {
+      const sizeCache = {};
+      document.querySelectorAll('.custom-option[data-size-image]').forEach(opt => {
+        const url = opt.dataset.sizeImage;
+        if (url) sizeCache[url] = preloadAndDecode(url);
+      });
+
+      window.__sizePreviewCache = sizeCache;
+      window.__swapSizePreview = function(url) {
+        swapInstant(sizePreviewImg, url, sizeCache);
+      };
     }
   })();
 
@@ -1075,7 +1155,6 @@
   ];
 
   function updateContactLock() {
-    // Contact unlocks only when size confirmed AND orientation chosen AND quantity chosen
     const unlocked = sizeConfirmed &&
                      !!stepValues.orientation &&
                      !!stepValues.quantity;
@@ -1200,7 +1279,11 @@
 
   function showSizePreview(imageSrc, label) {
     if (imageSrc) {
-      sizePreviewImg.src = imageSrc;
+      if (window.__swapSizePreview) {
+        window.__swapSizePreview(imageSrc);
+      } else {
+        sizePreviewImg.src = imageSrc;
+      }
       sizePreviewImg.alt = label || 'Selected frame size';
       sizePreviewLabel.textContent = label || '';
       sizePreviewWrap.classList.add('has-image');
